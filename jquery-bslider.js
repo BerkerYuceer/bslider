@@ -15,8 +15,8 @@
             midwidth = mywidth * count,
             urlLeft = 'http://img842.imageshack.us/img842/613/arrowleftr.png',
             urlRight = 'http://img7.imageshack.us/img7/4593/arrowrightq.png';
-        // urlLeft = "/Content/arrowleft.png"
-        // urlRight = "/Content/arrowright.png"
+        // urlLeft = "/Content/arrowleft.png" // if you store it in your own folder
+        // urlRight = "/Content/arrowright.png" // if you store it in your own folder
         // Cache Images and calgulate locations first
         for(i=0;i<count;i++) {
             // Cache Images
@@ -29,8 +29,6 @@
         // Clean
         this.empty();
         // Slider
-        // $('<div class="bslider"></div>').appendTo(this)
-        // this.addClass('bslider')
         var obj = this.addClass("bslider").css({
             padding: 0,
             width: mywidth,
@@ -39,7 +37,6 @@
             margin: '20px 10px',
             borderRadius: '20px 20px 20px 20px'
         });
-        // this.replaceWith(obj);
         // Append Image container
         var mid = $('<div class="mid"></div>').appendTo(obj).css({
             padding: 0,
