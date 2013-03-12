@@ -20,6 +20,19 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR 
  * OTHER DEALINGS IN THE SOFTWARE.
  */
+ /*
+    // For future usage
+    is = {
+        ff: window.globalStorage,
+        ie: document.all && !window.opera,
+        ie6: !window.XMLHttpRequest,
+        ie7: document.all && window.XMLHttpRequest && !XDomainRequest && !window.opera,
+        ie8: document.documentMode==8,
+        opera: Boolean(window.opera),
+        chrome: Boolean(window.chrome),
+        safari: window.getComputedStyle && !window.globalStorage && !window.opera 
+    }
+*/
 ;(function () {
     // Main function
     $.fn.bslider = function () {
@@ -37,8 +50,8 @@
             midwidth = mywidth * count,
             urlLeft = 'http://img842.imageshack.us/img842/613/arrowleftr.png',
             urlRight = 'http://img7.imageshack.us/img7/4593/arrowrightq.png';
-        // urlLeft = "/Content/arrowleft.png" // if you store it in your own folder
-        // urlRight = "/Content/arrowright.png" // if you store it in your own folder
+        // urlLeft = "/Content/arrowleft.png"
+        // urlRight = "/Content/arrowright.png"
         // Cache Images and calgulate locations first
         for(i=0;i<count;i++) {
             // Cache Images
@@ -51,21 +64,25 @@
         // Clean
         this.empty();
         // Slider
+        // $('<div class="bslider"></div>').appendTo(this)
+        // this.addClass('bslider')
         var obj = this.addClass("bslider").css({
             padding: 0,
             width: mywidth,
             height: myheight,
-            display: 'block',
             margin: '20px 10px',
+            position: 'absolute',
             borderRadius: '20px 20px 20px 20px'
         });
+        // this.replaceWith(obj);
         // Append Image container
         var mid = $('<div class="mid"></div>').appendTo(obj).css({
             padding: 0,
             width: mywidth,
             height: myheight,
             overflow: 'hidden',
-            display: 'block',
+            position: 'absolute',
+            display: 'inline-block',
             zIndex: 0
         });
         $('<div class="container">' + img + '</div>').appendTo(mid).css({
@@ -87,6 +104,7 @@
             clear: 'none',
             display: 'block',
             position: 'absolute',
+            zIndex: 1,
             margin: 0,
             opacity: 0,
             width: butwidth,
@@ -107,6 +125,7 @@
             clear: 'none',
             display: 'inline',
             position: 'relative',
+            zIndex: 1,
             margin: 0,
             opacity: 0,
             width: butwidth,
