@@ -70,7 +70,7 @@
             padding: 0,
             width: mywidth,
             height: myheight,
-            margin: '20px 10px',
+            margin: '20px auto',
             position: 'absolute',
             borderRadius: '20px 20px 20px 20px'
         });
