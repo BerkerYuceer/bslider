@@ -71,7 +71,6 @@
             width: mywidth,
             height: myheight,
             margin: '20px auto',
-            position: 'absolute',
             borderRadius: '20px 20px 20px 20px'
         });
         // this.replaceWith(obj);
