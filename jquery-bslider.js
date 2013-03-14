@@ -1,26 +1,26 @@
 /*
- * Copyright (c) 2013 BERKER YUCEER
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
- * and associated documentation files (the "Software"), 
- * to deal in the Software without restriction, 
- * including without limitation the rights to 
- * use, copy, modify, merge, publish, distribute, sublicense, 
- * and/or sell copies of the Software, and to permit persons to whom 
- * the Software is furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all 
- * copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
- * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR 
- * OTHER DEALINGS IN THE SOFTWARE.
- */
- /*
+* Copyright (c) 2013 BERKER YUCEER
+*
+* Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+* and associated documentation files (the "Software"), 
+* to deal in the Software without restriction, 
+* including without limitation the rights to 
+* use, copy, modify, merge, publish, distribute, sublicense, 
+* and/or sell copies of the Software, and to permit persons to whom 
+* the Software is furnished to do so, subject to the following conditions:
+*
+* The above copyright notice and this permission notice shall be included in all 
+* copies or substantial portions of the Software.
+* 
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+* INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+* IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
+* DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
+* ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR 
+* OTHER DEALINGS IN THE SOFTWARE.
+*/
+/*
     // For future usage
     is = {
         ff: window.globalStorage,
@@ -33,7 +33,7 @@
         safari: window.getComputedStyle && !window.globalStorage && !window.opera 
     }
 */
-;(function () {
+; (function () {
     // Main function
     $.fn.bslider = function () {
         // Static
@@ -50,10 +50,8 @@
             midwidth = mywidth * count,
             urlLeft = 'http://img842.imageshack.us/img842/613/arrowleftr.png',
             urlRight = 'http://img7.imageshack.us/img7/4593/arrowrightq.png';
-        // urlLeft = "/Content/arrowleft.png"
-        // urlRight = "/Content/arrowright.png"
         // Cache Images and calgulate locations first
-        for(i=0;i<count;i++) {
+        for (i = 0; i < count; i++) {
             // Cache Images
             var elem = this.children('img').eq(i);
             img = img + '<img src="' + elem.attr('src') + '" alt="' + elem.attr('alt') + '" />';
@@ -64,8 +62,6 @@
         // Clean
         this.empty();
         // Slider
-        // $('<div class="bslider"></div>').appendTo(this)
-        // this.addClass('bslider')
         var obj = this.addClass("bslider").css({
             padding: 0,
             width: mywidth,
@@ -73,7 +69,6 @@
             margin: '20px auto',
             borderRadius: '20px 20px 20px 20px'
         });
-        // this.replaceWith(obj);
         // Append Image container
         var mid = $('<div class="mid"></div>').appendTo(obj).css({
             padding: 0,
@@ -95,7 +90,16 @@
             width: mywidth,
             height: myheight,
             float: 'left',
-            clear: 'none'
+            clear: 'none',
+            /* Thanks to Seain Malkin 
+               selection disabled */
+            'user-select': 'none',
+            '-o-user-select': 'none',
+            '-ms-user-select': 'none',
+            '-moz-user-select': 'none',
+            '-khtml-user-select': 'none',
+            '-webkit-user-select': 'none',
+            '-webkit-touch-callout': 'none'
         });
         // Append Left button
         $('<div class="left"></div>').insertBefore(mid).css({
@@ -111,11 +115,12 @@
             cursor: 'pointer',
             background: 'url(' + urlLeft + ') no-repeat left center'
         }).hover(function () {
-            $(this).animate({opacity: 0.6 }, 'fast');
+            $(this).animate({ opacity: 0.6 }, 'fast');
         }).mouseleave(function () {
-            $(this).animate({opacity: 0 }, 'fast');
-        }).click(function () {
-            if (here > 0) { here--; } else { here = count-1; }
+            $(this).animate({ opacity: 0 }, 'fast');
+        }).click(function (e) {
+            e.preventDefault();
+            if (here > 0) { here--; } else { here = count - 1; }
             $('.mid .container').animate({ left: loc[here] }, 'fast');
         });
         // Append Right button
@@ -132,11 +137,12 @@
             cursor: 'pointer',
             background: 'url(' + urlRight + ') no-repeat right center'
         }).hover(function () {
-            $(this).animate({opacity: 0.6 }, 'fast');
+            $(this).animate({ opacity: 0.6 }, 'fast');
         }).mouseleave(function () {
-            $(this).animate({opacity: 0 }, 'fast');
-        }).click(function () {
-            if (here < count-1) { here++; } else { here = 0; }
+            $(this).animate({ opacity: 0 }, 'fast');
+        }).click(function (e) {
+            e.preventDefault();
+            if (here < count - 1) { here++; } else { here = 0; }
             $('.mid .container').animate({ left: loc[here] }, 'fast');
         });
         // Default behavior
