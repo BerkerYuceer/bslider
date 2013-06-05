@@ -20,135 +20,181 @@
 * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR 
 * OTHER DEALINGS IN THE SOFTWARE.
 */
-/*
-    // For future usage
-    is = {
-        ff: window.globalStorage,
-        ie: document.all && !window.opera,
-        ie6: !window.XMLHttpRequest,
-        ie7: document.all && window.XMLHttpRequest && !XDomainRequest && !window.opera,
-        ie8: document.documentMode==8,
-        opera: Boolean(window.opera),
-        chrome: Boolean(window.chrome),
-        safari: window.getComputedStyle && !window.globalStorage && !window.opera 
-    }
-*/
-; (function () {
-    // Main function
-    $.fn.bslider = function () {
-        // Static
-        var i = 0,
-            img = "",
-            here = 0,
-            result = 0,
-            butwidth = 45,
-            interval = 5000,
-            loc = new Array([]),
-            mywidth = this.width(),
-            myheight = this.height(),
-            count = this.children('img').length,
-            midwidth = mywidth * count,
-            urlLeft = 'http://img842.imageshack.us/img842/613/arrowleftr.png',
-            urlRight = 'http://img7.imageshack.us/img7/4593/arrowrightq.png';
-        // Cache Images and calgulate locations first
-        for (i = 0; i < count; i++) {
-            // Cache Images
-            var elem = this.children('img').eq(i);
-            img = img + '<img src="' + elem.attr('src') + '" alt="' + elem.attr('alt') + '" />';
-            // Calgulate locations
-            loc[i] = result;
-            result = result - mywidth;
+(function ($, undefined) {
+    $.widget("ui.bslider", {
+        options: {
+            width: 380,
+            height: 225,
+            interval: 5000,
+            count: 0,
+            speed: 'fast',
+            urlLeft: 'http://img842.imageshack.us/img842/613/arrowleftr.png',
+            urlRight: 'http://img7.imageshack.us/img7/4593/arrowrightq.png'
+        },
+        _create: function () {
+            var width = this.options.width,
+                height = this.options.height,
+                interval = this.options.interval,
+                count = this.options.count || this.element.children('img').length,
+                speed = this.options.speed,
+                urlLeft = this.options.urlLeft,
+                urlRight = this.options.urlRight,
+                imgLocation = new Array([]),
+                buttonWidth = 45,
+                here = 0,
+                left = 0,
+                img = "";
+            // Cache Images and calgulate locations first
+            for (i = 0; i < count; i++) {
+                // Cache Images
+                var elem = this.element.children('img').eq(i);
+                img = img + '<img src="' + elem.attr('src') + '" alt="' + elem.attr('alt') + '" />';
+                // Calgulate locations
+                imgLocation[i] = left;
+                left = left - width;
+            }
+            this.element.empty(); // Clean
+            // Slider
+            var obj = this.element.addClass("bslider").css({
+                padding: 0,
+                width: width,
+                height: height
+            });
+            // Append Image container
+            var mid = $('<div class="mid"></div>').appendTo(obj).css({
+                margin: 0,
+                padding: 0,
+                width: width,
+                height: height,
+                overflow: 'hidden',
+                position: 'absolute',
+                display: 'inline-block',
+                zIndex: 0
+            });
+            $('<div class="container">' + img + '</div>').appendTo(mid).css({
+                margin: 0,
+                padding: 0,
+                width: width * count,
+                height: height,
+                position: 'relative',
+                display: 'inline-block',
+                zIndex: -1
+            }).children('img').css({
+                float: 'left',
+                clear: 'none',
+                width: width,
+                height: height,
+                /* Thanks to Seain Malkin 
+                   selection disabled */
+                'user-select': 'none',
+                '-o-user-select': 'none',
+                '-ms-user-select': 'none',
+                '-moz-user-select': 'none',
+                '-khtml-user-select': 'none',
+                '-webkit-user-select': 'none',
+                '-webkit-touch-callout': 'none'
+            });
+            // Append Left button
+            $('<div class="left"></div>').insertBefore(mid).css({
+                float: 'left',
+                clear: 'none',
+                margin: 0,
+                padding: 0,
+                opacity: 0,
+                width: buttonWidth,
+                height: height,
+                background: 'url(' + urlLeft + ') no-repeat left center',
+                cursor: 'pointer',
+                display: 'block',
+                position: 'absolute',
+                zIndex: 1
+            }).hover(function () {
+                $(this).animate({ opacity: 0.6 }, 'fast');
+            }).mouseleave(function () {
+                $(this).animate({ opacity: 0 }, 'fast');
+            }).click(function (e) {
+                e.preventDefault();
+                if (here > 0) { here--; } else { here = count - 1; }
+                $('.mid .container').animate({ left: imgLocation[here] }, speed);
+            });
+            // Append Right button
+            $('<div class="right"></div>').insertBefore(mid).css({
+                float: 'right',
+                clear: 'none',
+                margin: 0,
+                padding: 0,
+                opacity: 0,
+                width: buttonWidth,
+                height: height,
+                background: 'url(' + urlRight + ') no-repeat right center',
+                cursor: 'pointer',
+                display: 'inline',
+                position: 'relative',
+                zIndex: 1
+            }).hover(function () {
+                $(this).animate({ opacity: 0.6 }, 'fast');
+            }).mouseleave(function () {
+                $(this).animate({ opacity: 0 }, 'fast');
+            }).click(function (e) {
+                e.preventDefault();
+                if (here < count - 1) { here++; } else { here = 0; }
+                $('.mid .container').animate({ left: imgLocation[here] }, speed);
+            });
+            // Auto slide behavior
+            function doIt() { obj.find('.right').click(); }
+            var int = setInterval(doIt, interval);
+            // Allow chain
+            return obj;
+        },
+        _destroy: function () {
+            this.element.empty(); // Clean
+            this.element.removeClass("bslider");
+            this.element.append(img);
+            return this.element;
+        },
+        width: function (newWidth) {
+            if (newWidth === undefined) {
+                return this.options.width;
+            }
+            this.options.width = this._constrainedValue(newWidth);
+        },
+        height: function (newHeight) {
+            if (newHeight === undefined) {
+                return this.options.height;
+            }
+            this.options.height = newHeight;
+        },
+        interval: function (newInterval) {
+            if (newInterval === undefined) {
+                return this.options.interval;
+            }
+            this.options.interval = newInterval;
+        },
+        speed: function (newSpeed) {
+            if (newSpeed === undefined && newSpeed != 'slow') {
+                return this.options.speed;
+            }
+            this.options.speed = newSpeed;
+        },
+        count: function (newCount) {
+            if (newCount === undefined) {
+                return this.element.children().length;
+            }
+            // Don't allow any count more than image count
+            this.options.count = Math.min(count, newCount);
+        },
+        urlLeft: function (newUrlLeft) {
+            if (newUrlLeft === undefined) {
+                return this.options.urlLeft;
+            }
+            this.options.urlLeft = newUrlLeft;
+        },
+        urlRight: function (newUrlRight) {
+            if (newUrlRight === undefined) {
+                return this.options.urlRight;
+            }
+            this.options.urlRight = newUrlRight;
         }
-        // Clean
-        this.empty();
-        // Slider
-        var obj = this.addClass("bslider").css({
-            padding: 0,
-            width: mywidth,
-            height: myheight,
-            margin: '20px auto',
-            borderRadius: '20px 20px 20px 20px'
-        });
-        // Append Image container
-        var mid = $('<div class="mid"></div>').appendTo(obj).css({
-            padding: 0,
-            width: mywidth,
-            height: myheight,
-            overflow: 'hidden',
-            position: 'absolute',
-            display: 'inline-block',
-            zIndex: 0
-        });
-        $('<div class="container">' + img + '</div>').appendTo(mid).css({
-            padding: 0,
-            width: midwidth,
-            height: myheight,
-            position: 'relative',
-            display: 'inline-block',
-            zIndex: -1
-        }).children('img').css({
-            width: mywidth,
-            height: myheight,
-            float: 'left',
-            clear: 'none',
-            /* Thanks to Seain Malkin 
-               selection disabled */
-            'user-select': 'none',
-            '-o-user-select': 'none',
-            '-ms-user-select': 'none',
-            '-moz-user-select': 'none',
-            '-khtml-user-select': 'none',
-            '-webkit-user-select': 'none',
-            '-webkit-touch-callout': 'none'
-        });
-        // Append Left button
-        $('<div class="left"></div>').insertBefore(mid).css({
-            float: 'left',
-            clear: 'none',
-            display: 'block',
-            position: 'absolute',
-            zIndex: 1,
-            margin: 0,
-            opacity: 0,
-            width: butwidth,
-            height: myheight,
-            cursor: 'pointer',
-            background: 'url(' + urlLeft + ') no-repeat left center'
-        }).hover(function () {
-            $(this).animate({ opacity: 0.6 }, 'fast');
-        }).mouseleave(function () {
-            $(this).animate({ opacity: 0 }, 'fast');
-        }).click(function (e) {
-            e.preventDefault();
-            if (here > 0) { here--; } else { here = count - 1; }
-            $('.mid .container').animate({ left: loc[here] }, 'fast');
-        });
-        // Append Right button
-        $('<div class="right"></div>').insertBefore(mid).css({
-            float: 'right',
-            clear: 'none',
-            display: 'inline',
-            position: 'relative',
-            zIndex: 1,
-            margin: 0,
-            opacity: 0,
-            width: butwidth,
-            height: myheight,
-            cursor: 'pointer',
-            background: 'url(' + urlRight + ') no-repeat right center'
-        }).hover(function () {
-            $(this).animate({ opacity: 0.6 }, 'fast');
-        }).mouseleave(function () {
-            $(this).animate({ opacity: 0 }, 'fast');
-        }).click(function (e) {
-            e.preventDefault();
-            if (here < count - 1) { here++; } else { here = 0; }
-            $('.mid .container').animate({ left: loc[here] }, 'fast');
-        });
-        // Default behavior
-        function doIt() { obj.find('.right').click(); }
-        var int = setInterval(doIt, interval);
-        // Allow chain
-        return obj;
-    };
-} ());
+    });
+    $.extend($.ui.bslider, { version: "1.0.0" });
+})(jQuery);
