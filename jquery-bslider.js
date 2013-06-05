@@ -23,8 +23,8 @@
 (function ($, undefined) {
     $.widget("ui.bslider", {
         options: {
-            width: 380,
-            height: 225,
+            width: 0,
+            height: 0,
             interval: 5000,
             count: 0,
             speed: 'fast',
@@ -32,8 +32,8 @@
             urlRight: 'http://img7.imageshack.us/img7/4593/arrowrightq.png'
         },
         _create: function () {
-            var width = this.options.width,
-                height = this.options.height,
+            var width = this.options.width || this.element.width(),
+                height = this.options.height || this.element.height(),
                 interval = this.options.interval,
                 count = this.options.count || this.element.children('img').length,
                 speed = this.options.speed,
@@ -154,13 +154,13 @@
         },
         width: function (newWidth) {
             if (newWidth === undefined) {
-                return this.options.width;
+                return this.element.width;
             }
-            this.options.width = this._constrainedValue(newWidth);
+            this.options.width = newWidth;
         },
         height: function (newHeight) {
             if (newHeight === undefined) {
-                return this.options.height;
+                return this.element.height;
             }
             this.options.height = newHeight;
         },
