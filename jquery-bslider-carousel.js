@@ -56,8 +56,8 @@ safari: window.getComputedStyle && !window.globalStorage && !window.opera
             images = "",
             img = new Array([]),
             loc = new Array([]),
-            mywidth = this.width(),
-            myheight = this.height(),
+            mywidth = 450, // this.width(),
+            myheight = 320, // this.height(),
             count = this.children('img').length,
             aspect = 0;
         if (mywidth > myheight)
@@ -93,15 +93,16 @@ safari: window.getComputedStyle && !window.globalStorage && !window.opera
             clear: 'both',
             margin: 0,
             padding: 0,
-            width: mywidth,
+            maxWidth: mywidth,
+            marginLeft: (mywidth - bordersize - $('.mid').width()) / 2,
             height: myheight,
             overflow: 'hidden',
             position: 'relative',
-            display: 'inline-block',
+            display: 'block',
             border: '5px solid white',
             'box-shadow': '0 0 4px gray, 0 1px 4px gray',
             zIndex: 0
-        }).children('img').css({ width: mywidth, height: myheight });
+        }).children('img').css({ height: myheight });
         // Append Image container
         var bottom = $('<div class="bottom"></div>').appendTo(obj).css({
             float: 'left',
@@ -126,6 +127,7 @@ safari: window.getComputedStyle && !window.globalStorage && !window.opera
         }).append(images).children('img').css({
             float: 'left',
             clear: 'none',
+            cursor: 'pointer',
             marginTop: 5,
             marginLeft: 5,
             marginRight: 0,
@@ -147,8 +149,11 @@ safari: window.getComputedStyle && !window.globalStorage && !window.opera
             ).click(function () {
                 here = $(".container > img").index(this);
                 $('.mid > img').fadeOut("slow", function () {
-                    var item = $(img[here].toString()).css({ width: mywidth, height: myheight }).hide();
+                    var item = $(img[here].toString()).css({ height: myheight }).hide();
                     $('.mid').empty().append(item).children('img').fadeIn("slow");
+                    $('.mid').css({
+                        marginLeft: (mywidth - bordersize - $('.mid').width()) / 2
+                    });
                 });
             });
         });
@@ -180,8 +185,11 @@ safari: window.getComputedStyle && !window.globalStorage && !window.opera
         function doIt() {
             if (here < count - 1) { here = here + 1; } else { here = 0; }
             $('.mid > img').fadeOut("slow", function () {
-                var item = $(img[here].toString()).css({ width: mywidth, height: myheight }).hide();
+                var item = $(img[here].toString()).css({ height: myheight }).hide();
                 $('.mid').empty().append(item).children('img').fadeIn("slow");
+                $('.mid').css({
+                    marginLeft: (mywidth - bordersize - $('.mid').width()) / 2
+                });
             });
         }
         var ints = setInterval(doIt, interval * 3);
