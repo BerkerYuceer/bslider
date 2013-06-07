@@ -27,7 +27,7 @@
             height: 0,
             interval: 10000,
             count: 0,
-            speed: 'fast'
+            speed: 'slow'
         },
         _create: function () {
             var width = this.options.width || this.element.width(),
@@ -125,9 +125,9 @@
                     }
                 ).click(function () {
                     here = $(".container > img").index(this);
-                    $('.mid > img').fadeOut("slow", function () {
+                    $('.mid > img').fadeOut(speed, function () {
                         var item = $(img[here].toString()).css({ height: height }).hide();
-                        $('.mid').empty().append(item).children('img').fadeIn("slow");
+                        $('.mid').empty().append(item).children('img').fadeIn(speed);
                         $('.mid').css({
                             marginLeft: (width - borderSize - $('.mid').width()) / 2
                         });
@@ -150,9 +150,9 @@
             // Auto slide behavior
             function doIt() {
                 if (here < count - 1) { here = here + 1; } else { here = 0; }
-                $('.mid > img').fadeOut("slow", function () {
+                $('.mid > img').fadeOut(speed, function () {
                     var item = $(img[here].toString()).css({ height: height }).hide();
-                    $('.mid').empty().append(item).children('img').fadeIn("slow");
+                    $('.mid').empty().append(item).children('img').fadeIn(speed);
                     $('.mid').css({
                         marginLeft: (width - borderSize - $('.mid').width()) / 2
                     });
