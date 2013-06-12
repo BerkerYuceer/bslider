@@ -53,7 +53,7 @@ Usage when user defined options:
         $("#container").bslider({
           width: 380,                                   // Width of slider (default value is container's css)
           height: 225,                                  // Height of slider (default value is container's css)
-          interval: 3000,                               // Interval between each image slide by milisecond (default 5000)
+          interval: 5000,                               // Interval between each image slide by milisecond (default 5000)
           count: 3,                                     // Image count you want to show (in this case last 3 img hidden)
           speed: 'slow',                                // Speed of slide animation ('fast', 'slow', 200) // 200 as miliseconds
           urlLeft: 'http://www.blabla.com/image4.jpg',  // You can define your own left, right button by giving img url 
@@ -90,9 +90,9 @@ Usage when user defined options:
         $("#container").bshowcase({
           width: 450,                                   // Width of slider (default value is container's css)
           height: 320,                                  // Height of slider (default value is container's css)
-          interval: 3000,                               // Interval between each image slide by milisecond (default 5000)
-          count: 3,                                     // Image count you want to show (in this case last 3 img hidden)
-          speed: 'fast'                                 // Speed of fade animation ('fast', 'slow', 200) // 200 as miliseconds
+          interval: 4000,                               // Interval between each image slide by milisecond (default 5000)
+          count: 4,                                     // Image count you want to show (in this case last 2 img hidden)
+          speed: 800                                    // Speed of fade animation ('fast', 'slow', 200) // 200 as miliseconds
         });
       });
     </script>
