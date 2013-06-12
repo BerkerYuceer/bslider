@@ -21,16 +21,13 @@
 * OTHER DEALINGS IN THE SOFTWARE.
 */
 (function ($, undefined) {
-    $.widget("ui.bslider", {
+    $.widget("ui.bshowcase", {
         options: {
             width: 0,
             height: 0,
             interval: 5000,
             count: 0,
-            speed: 200,
-            urlLeft: 'http://img842.imageshack.us/img842/613/arrowleftr.png',
-            urlRight: 'http://img7.imageshack.us/img7/4593/arrowrightq.png',
-            autoSlide: true
+            speed: 1000
         },
         _create: function () {
             var width = this.options.width || this.element.width(),
@@ -38,130 +35,157 @@
                 interval = this.options.interval,
                 count = this.options.count || this.element.children('img').length,
                 speed = this.options.speed,
-                urlLeft = this.options.urlLeft,
-                urlRight = this.options.urlRight,
-                autoSlide = this.options.autoSlide,
-                imgLocation = new Array([]),
-                buttonWidth = 45,
+                images = "",
+                img = new Array([]),
+                imgWidth = new Array([]),
+                imgHeight = new Array([]),
+                thumbBorderSize = 4,
+                thumbWidth = width / 6,
+                thumbHeight = height / 6,
+                ratioHeight = 0,
+                ratioWidth = 0,
+                borderSize = 5,
+                marginSize = 5,
+                midwidth = 0,
+                aspect = 0,
                 here = 0,
-                left = 0,
-                img = "";
+                left = 0;
             // Cache Images and calgulate locations first
             for (i = 0; i < count; i++) {
                 // Cache Images
                 var elem = this.element.children('img').eq(i);
-                img = img + '<img src="' + elem.attr('src') + '" alt="' + elem.attr('alt') + '" />';
-                // Calgulate locations
-                imgLocation[i] = left;
-                left = left - width;
+                // Calgulate AspectRatio
+                ratioWidth = thumbWidth / elem.width();
+                ratioHeight = thumbHeight / elem.height();
+                // Choose the smaller ratio
+                if (ratioWidth > ratioHeight)
+                { aspect = ratioHeight; }
+                else
+                { aspect = ratioWidth; }
+                // Calgulate newWidth and newHeight
+                imgWidth[i] = elem.width() * aspect;
+                imgHeight[i] = elem.height() * aspect;
+                // Calgulate container width
+                midwidth = midwidth + (imgWidth[i] + thumbBorderSize * 2 + marginSize);
+                img[i] = '<img src="' + elem.attr('src') + '" alt="' + elem.attr('alt') + '" />';
+                images = images + img[i];
             }
             this.element.empty(); // Clean
             // Slider
-            var obj = this.element.addClass("ui-bslider").css({
+            var obj = this.element.addClass("ui-bshowcase").css({
                 padding: 0,
                 width: width,
-                height: height,
-                /* Thanks to Seain Malkin 
-                selection disabled */
-                'user-select': 'none',
-                '-o-user-select': 'none',
-                '-ms-user-select': 'none',
-                '-moz-user-select': 'none',
-                '-khtml-user-select': 'none',
-                '-webkit-user-select': 'none',
-                '-webkit-touch-callout': 'none'
+                height: height + thumbHeight + borderSize * 2 + thumbBorderSize * 2 + marginSize
             });
-            // Append Image container
-            var mid = $('<div class="ui-bslider-mid"></div>').appendTo(obj).css({
+            // Append Main Image container
+            var mid = $('<div class="ui-bshowcase-mid">' + img[0] + '</div>').appendTo(obj).css({
+                float: 'left',
+                clear: 'both',
                 margin: 0,
                 padding: 0,
-                width: width,
+                maxWidth: width,
+                marginLeft: (width - borderSize - $('.ui-bshowcase-mid').width()) / 2,
                 height: height,
                 overflow: 'hidden',
-                position: 'absolute',
-                display: 'inline-block',
+                position: 'relative',
+                display: 'block',
+                border: '5px solid white',
+                'box-shadow': '0 0 4px silver, 0 1px 4px silver',
+                zIndex: 0
+            }).children('img').css({ height: height });
+            // Append thumbImage container
+            var bottom = $('<div class="ui-bshowcase-bottom"></div>').appendTo(obj).css({
+                float: 'left',
+                padding: 0,
+                margin: borderSize + 'px 0 0 ' + (borderSize * -1) + 'px',
+                bottom: 0,
+                width: width + borderSize * 2,
+                height: thumbHeight + marginSize * 2 + thumbBorderSize * 2,
+                overflow: 'hidden',
+                position: 'relative',
+                display: 'block',
                 zIndex: 0
             });
-            $('<div class="ui-bslider-container">' + img + '</div>').appendTo(mid).css({
-                margin: 0,
-                padding: 0,
-                width: width * count,
-                height: height,
-                position: 'relative',
-                display: 'inline-block',
-                zIndex: -1
-            }).children('img').css({
+            $('<div class="ui-bshowcase-container"></div>').appendTo(".ui-bshowcase-bottom").css({
                 float: 'left',
-                clear: 'none',
-                width: width,
-                height: height,
-                /* Thanks to Seain Malkin 
-                selection disabled */
-                'user-select': 'none',
-                '-o-user-select': 'none',
-                '-ms-user-select': 'none',
-                '-moz-user-select': 'none',
-                '-khtml-user-select': 'none',
-                '-webkit-user-select': 'none',
-                '-webkit-touch-callout': 'none'
-            });
-            // Append Left button
-            $('<div class="ui-bslider-left"></div>').insertBefore(mid).css({
-                float: 'left',
-                clear: 'none',
-                margin: 0,
                 padding: 0,
-                opacity: 0,
-                width: buttonWidth,
-                height: height,
-                background: 'url(' + urlLeft + ') no-repeat left center',
-                cursor: 'pointer',
+                margin: 0,
+                width: midwidth,
                 display: 'block',
-                position: 'absolute',
-                zIndex: 1
-            }).hover(function () {
-                $(this).animate({ opacity: 0.6 }, 'fast');
-            }).mouseleave(function () {
-                $(this).animate({ opacity: 0 }, 'fast');
-            }).click(function (e) {
-                e.preventDefault();
-                if (here > 0) { here--; } else { here = count - 1; }
-                $('.ui-bslider-mid .ui-bslider-container').animate({ left: imgLocation[here] }, speed);
-            });
-            // Append Right button
-            $('<div class="ui-bslider-right"></div>').insertBefore(mid).css({
-                float: 'right',
-                clear: 'none',
-                margin: 0,
-                padding: 0,
-                opacity: 0,
-                width: buttonWidth,
-                height: height,
-                background: 'url(' + urlRight + ') no-repeat right center',
-                cursor: 'pointer',
-                display: 'inline',
                 position: 'relative',
-                zIndex: 1
-            }).hover(function () {
-                $(this).animate({ opacity: 0.6 }, 'fast');
-            }).mouseleave(function () {
-                $(this).animate({ opacity: 0 }, 'fast');
-            }).click(function (e) {
-                e.preventDefault();
-                if (here < count - 1) { here++; } else { here = 0; }
-                $('.ui-bslider-mid .ui-bslider-container').animate({ left: imgLocation[here] }, speed);
+                zIndex: -1
+            }).append(images).children('img').each(function () {
+                $(this).css({
+                    float: 'left',
+                    clear: 'none',
+                    cursor: 'pointer',
+                    opacity: 0.4,
+                    marginTop: 5,
+                    marginLeft: 5,
+                    marginRight: 0,
+                    marginBottom: 0,
+                    width: imgWidth[$(".ui-bshowcase-container > img").index(this)],
+                    height: thumbHeight,
+                    border: '4px solid white',
+                    'box-shadow': '0 0 4px gray',
+                    'list-style': 'none'
+                }).hover(function () {
+                    $(".ui-bshowcase-container > img").css({ opacity: 0.4 });
+                    $(this).css({ opacity: 1 });
+                });
+                $(this).click(function () {
+                    here = $(".ui-bshowcase-container > img").index(this);
+                    $('.ui-bshowcase-mid > img').fadeOut(speed, function () {
+                        var item = $(img[here]).css({ height: height }).hide();
+                        $('.ui-bshowcase-mid').empty().append(item).children('img').fadeIn(speed);
+                        $('.ui-bshowcase-mid').animate({
+                            marginLeft: (width - borderSize - $('.ui-bshowcase-mid').width()) / 2
+                        }, speed);
+                    });
+                });
             });
-            if (autoSlide) {
-                // Auto slide behavior
-                function doIt() { obj.find('.ui-bslider-right').click(); }
-                var int = setInterval(doIt, interval);
+            $(".ui-bshowcase-bottom").mousemove(function (e) {
+                var position = $(this).position(),
+                    width = $(this).width(),
+                    minX = position.left + (width / 5),
+                    maxX = minX + width,
+                    tickSize = width / midwidth;
+                if (e.pageX >= minX && e.pageX <= maxX) {
+                    var val = ((e.pageX - minX) / tickSize) * -1;
+                    if (val > (midwidth - (width + borderSize * 2)) * -1) {
+                        $('.ui-bshowcase-container').css({ left: val });
+                    }
+                }
+            });
+            // Auto slide behavior
+            function doIt() {
+                if (here < count - 1) { here = here + 1; } else { here = 0; }
+                $('.ui-bshowcase-mid > img').fadeOut(speed, function () {
+                    var item = $(img[here].toString()).css({ height: height }).hide();
+                    $('.ui-bshowcase-mid').empty().append(item).children('img').fadeIn(speed);
+                    $('.ui-bshowcase-mid').animate({
+                        marginLeft: (width - borderSize - $('.ui-bshowcase-mid').width()) / 2
+                    }, speed);
+                    var val = 0;
+                    for (var i = 0; i < here; i++) {
+                        val = val + imgWidth[i] + marginSize + (thumbBorderSize * 2);
+                    }
+                    val = (val - ((width + borderSize * 2) / 2) + (imgWidth[i] / 2)) * -1;
+                    if (val > (midwidth - (width + borderSize * 2) + imgWidth[i]) * -1 && val < 0) {
+                        $('.ui-bshowcase-container').animate({ left: val }, speed);
+                    } else if (here == 0) {
+                        $('.ui-bshowcase-container').animate({ left: 0 }, speed);
+                    }
+                    $(".ui-bshowcase-container > img").css({ opacity: 0.4 }).eq(here).css({ opacity: 1 });
+                });
             }
+            var ints = setInterval(doIt, interval);
             // Allow chain
             return obj;
         },
         _destroy: function () {
             this.element.empty(); // Clean
-            this.element.removeClass("ui-bslider");
+            this.element.removeClass("ui-bshowcase");
             this.element.append(img);
             return this.element;
         },
@@ -195,25 +219,7 @@
             }
             // Don't allow any count more than image count
             this.options.count = Math.min(count, newCount);
-        },
-        urlLeft: function (newUrlLeft) {
-            if (newUrlLeft === undefined) {
-                return this.options.urlLeft;
-            }
-            this.options.urlLeft = newUrlLeft;
-        },
-        urlRight: function (newUrlRight) {
-            if (newUrlRight === undefined) {
-                return this.options.urlRight;
-            }
-            this.options.urlRight = newUrlRight;
-        },
-        autoSlide: function (newAutoSlide) {
-            if (newAutoSlide === undefined) {
-                return this.options.autoSlide;
-            }
-            this.options.autoSlide = newAutoSlide;
         }
     });
-    $.extend($.ui.bslider, { version: "1.0.0" });
+    $.extend($.ui.bshowcase, { version: "1.0.1" });
 })(jQuery);
