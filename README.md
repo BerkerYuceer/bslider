@@ -55,10 +55,11 @@ Usage when user defined options:
           height: 225,                                  // Height of slider (default value is container's css)
           interval: 3000,                               // Interval between each image slide by milisecond (default 5000)
           count: 3,                                     // Image count you want to show (in this case last 3 img hidden)
-          speed: 'slow',                                // Speed of slide animation ('fast', 'slow') default: fast
+          speed: 'slow',                                // Speed of slide animation ('fast', 'slow', 200) // 200 as miliseconds
           urlLeft: 'http://www.blabla.com/image4.jpg',  // You can define your own left, right button by giving img url 
-          urlRigh: 'http://www.blabla.com/image5.jpg'   // they both has same widht as 45px
-        });
+          urlRigh: 'http://www.blabla.com/image5.jpg',  // they both has same widht as 45px
+          autoSlide: false                              // Boolean for timed animations by given interval. def: true -
+        });                                             // On false animates only when clicked..
       });
     </script>
 
@@ -91,7 +92,7 @@ Usage when user defined options:
           height: 320,                                  // Height of slider (default value is container's css)
           interval: 3000,                               // Interval between each image slide by milisecond (default 5000)
           count: 3,                                     // Image count you want to show (in this case last 3 img hidden)
-          speed: 'fast'                                 // Speed of fade animation ('fast', 'slow') default: slow
+          speed: 'fast'                                 // Speed of fade animation ('fast', 'slow', 200) // 200 as miliseconds
         });
       });
     </script>
