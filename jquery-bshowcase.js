@@ -25,9 +25,9 @@
         options: {
             width: 0,
             height: 0,
-            interval: 10000,
+            interval: 5000,
             count: 0,
-            speed: 'slow'
+            speed: 1000
         },
         _create: function () {
             var width = this.options.width || this.element.width(),
@@ -37,63 +37,76 @@
                 speed = this.options.speed,
                 images = "",
                 img = new Array([]),
+                imgWidth = new Array([]),
+                imgHeight = new Array([]),
                 thumbBorderSize = 4,
+                thumbWidth = width / 6,
+                thumbHeight = height / 6,
+                ratioHeight = 0,
+                ratioWidth = 0,
                 borderSize = 5,
                 marginSize = 5,
+                midwidth = 0,
                 aspect = 0,
                 here = 0,
                 left = 0;
-            if (width > height)
-            { aspect = height / width; }
-            else
-            { aspect = width / height; }
-            var thumbWidth = aspect * (width / 5),
-                thumbHeight = aspect * (height / 5),
-                midwidth = (thumbWidth + thumbBorderSize * 2 + marginSize) * count;
             // Cache Images and calgulate locations first
             for (i = 0; i < count; i++) {
                 // Cache Images
                 var elem = this.element.children('img').eq(i);
+                // Calgulate AspectRatio
+                ratioWidth = thumbWidth / elem.width();
+                ratioHeight = thumbHeight / elem.height();
+                // Choose the smaller ratio
+                if (ratioWidth > ratioHeight)
+                { aspect = ratioHeight; }
+                else
+                { aspect = ratioWidth; }
+                // Calgulate newWidth and newHeight
+                imgWidth[i] = elem.width() * aspect;
+                imgHeight[i] = elem.height() * aspect;
+                // Calgulate container width
+                midwidth = midwidth + (imgWidth[i] + thumbBorderSize * 2 + marginSize);
                 img[i] = '<img src="' + elem.attr('src') + '" alt="' + elem.attr('alt') + '" />';
-                images = images + '<img src="' + elem.attr('src') + '" alt="' + elem.attr('alt') + '" />';
+                images = images + img[i];
             }
             this.element.empty(); // Clean
             // Slider
-            var obj = this.element.addClass("bshowcase").css({
+            var obj = this.element.addClass("ui-bshowcase").css({
                 padding: 0,
                 width: width,
                 height: height + thumbHeight + borderSize * 2 + thumbBorderSize * 2 + marginSize
             });
             // Append Main Image container
-            var mid = $('<div class="mid">' + img[0] + '</div>').appendTo(obj).css({
+            var mid = $('<div class="ui-bshowcase-mid">' + img[0] + '</div>').appendTo(obj).css({
                 float: 'left',
                 clear: 'both',
                 margin: 0,
                 padding: 0,
                 maxWidth: width,
-                marginLeft: (width - borderSize - $('.mid').width()) / 2,
+                marginLeft: (width - borderSize - $('.ui-bshowcase-mid').width()) / 2,
                 height: height,
                 overflow: 'hidden',
                 position: 'relative',
                 display: 'block',
                 border: '5px solid white',
-                'box-shadow': '0 0 4px gray, 0 1px 4px gray',
+                'box-shadow': '0 0 4px silver, 0 1px 4px silver',
                 zIndex: 0
             }).children('img').css({ height: height });
             // Append thumbImage container
-            var bottom = $('<div class="bottom"></div>').appendTo(obj).css({
+            var bottom = $('<div class="ui-bshowcase-bottom"></div>').appendTo(obj).css({
                 float: 'left',
                 padding: 0,
-                margin: 0,
+                margin: borderSize + 'px 0 0 ' + (borderSize * -1) + 'px',
                 bottom: 0,
                 width: width + borderSize * 2,
                 height: thumbHeight + marginSize * 2 + thumbBorderSize * 2,
                 overflow: 'hidden',
                 position: 'relative',
-                display: 'inline-block',
+                display: 'block',
                 zIndex: 0
             });
-            $('<div class="container"></div>').appendTo(".bottom").css({
+            $('<div class="ui-bshowcase-container"></div>').appendTo(".ui-bshowcase-bottom").css({
                 float: 'left',
                 padding: 0,
                 margin: 0,
@@ -101,61 +114,69 @@
                 display: 'block',
                 position: 'relative',
                 zIndex: -1
-            }).append(images).children('img').css({
-                float: 'left',
-                clear: 'none',
-                cursor: 'pointer',
-                marginTop: 5,
-                marginLeft: 5,
-                marginRight: 0,
-                marginBottom: 0,
-                width: thumbWidth,
-                height: thumbHeight,
-                border: '4px solid white',
-                'box-shadow': '0 0 4px gray',
-                'list-style': 'none'
-            }).each(function () {
-                $(this).hover(
-                    function () {
-                        $(".container > img").css({ opacity: 0.4 });
-                        $(this).css({ opacity: 1 });
-                    },
-                    function () {
-                        $(".container > img").css({ opacity: 1 });
-                    }
-                ).click(function () {
-                    here = $(".container > img").index(this);
-                    $('.mid > img').fadeOut(speed, function () {
-                        var item = $(img[here].toString()).css({ height: height }).hide();
-                        $('.mid').empty().append(item).children('img').fadeIn(speed);
-                        $('.mid').css({
-                            marginLeft: (width - borderSize - $('.mid').width()) / 2
-                        });
+            }).append(images).children('img').each(function () {
+                $(this).css({
+                    float: 'left',
+                    clear: 'none',
+                    cursor: 'pointer',
+                    opacity: 0.4,
+                    marginTop: 5,
+                    marginLeft: 5,
+                    marginRight: 0,
+                    marginBottom: 0,
+                    width: imgWidth[$(".ui-bshowcase-container > img").index(this)],
+                    height: thumbHeight,
+                    border: '4px solid white',
+                    'box-shadow': '0 0 4px gray',
+                    'list-style': 'none'
+                }).hover(function () {
+                    $(".ui-bshowcase-container > img").css({ opacity: 0.4 });
+                    $(this).css({ opacity: 1 });
+                });
+                $(this).click(function () {
+                    here = $(".ui-bshowcase-container > img").index(this);
+                    $('.ui-bshowcase-mid > img').fadeOut(speed, function () {
+                        var item = $(img[here]).css({ height: height }).hide();
+                        $('.ui-bshowcase-mid').empty().append(item).children('img').fadeIn(speed);
+                        $('.ui-bshowcase-mid').animate({
+                            marginLeft: (width - borderSize - $('.ui-bshowcase-mid').width()) / 2
+                        }, speed);
                     });
                 });
             });
-            $(".bottom").mousemove(function (e) {
+            $(".ui-bshowcase-bottom").mousemove(function (e) {
                 var position = $(this).position(),
                     width = $(this).width(),
-                    minX = position.left + thumbWidth,
+                    minX = position.left + (width / 5),
                     maxX = minX + width,
                     tickSize = width / midwidth;
                 if (e.pageX >= minX && e.pageX <= maxX) {
                     var val = ((e.pageX - minX) / tickSize) * -1;
-                    if (val > (midwidth - width + borderSize * 2) * -1) {
-                        $('.container').css({ left: val });
+                    if (val > (midwidth - (width + borderSize * 2)) * -1) {
+                        $('.ui-bshowcase-container').css({ left: val });
                     }
                 }
             });
             // Auto slide behavior
             function doIt() {
                 if (here < count - 1) { here = here + 1; } else { here = 0; }
-                $('.mid > img').fadeOut(speed, function () {
+                $('.ui-bshowcase-mid > img').fadeOut(speed, function () {
                     var item = $(img[here].toString()).css({ height: height }).hide();
-                    $('.mid').empty().append(item).children('img').fadeIn(speed);
-                    $('.mid').css({
-                        marginLeft: (width - borderSize - $('.mid').width()) / 2
-                    });
+                    $('.ui-bshowcase-mid').empty().append(item).children('img').fadeIn(speed);
+                    $('.ui-bshowcase-mid').animate({
+                        marginLeft: (width - borderSize - $('.ui-bshowcase-mid').width()) / 2
+                    }, speed);
+                    var val = 0;
+                    for (var i = 0; i < here; i++) {
+                        val = val + imgWidth[i] + marginSize + (thumbBorderSize * 2);
+                    }
+                    val = (val - ((width + borderSize * 2) / 2) + (imgWidth[i] / 2)) * -1;
+                    if (val > (midwidth - (width + borderSize * 2) + imgWidth[i]) * -1 && val < 0) {
+                        $('.ui-bshowcase-container').animate({ left: val }, speed);
+                    } else if (here == 0) {
+                        $('.ui-bshowcase-container').animate({ left: 0 }, speed);
+                    }
+                    $(".ui-bshowcase-container > img").css({ opacity: 0.4 }).eq(here).css({ opacity: 1 });
                 });
             }
             var ints = setInterval(doIt, interval);
@@ -164,7 +185,7 @@
         },
         _destroy: function () {
             this.element.empty(); // Clean
-            this.element.removeClass("bshowcase");
+            this.element.removeClass("ui-bshowcase");
             this.element.append(img);
             return this.element;
         },
@@ -187,7 +208,7 @@
             this.options.interval = newInterval;
         },
         speed: function (newSpeed) {
-            if (newSpeed === undefined && newSpeed != 'slow') {
+            if (newSpeed === undefined) {
                 return this.options.speed;
             }
             this.options.speed = newSpeed;
