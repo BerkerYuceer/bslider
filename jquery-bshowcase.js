@@ -26,8 +26,9 @@
             width: 0,
             height: 0,
             interval: 5000,
+            speed: 1000,
             count: 0,
-            speed: 1000
+            autoSlide: true
         },
         _create: function () {
             var width = this.options.width || this.element.width(),
@@ -35,6 +36,7 @@
                 interval = this.options.interval,
                 count = this.options.count || this.element.children('img').length,
                 speed = this.options.speed,
+                autoSlide = this.options.autoSlide,
                 images = "",
                 img = new Array([]),
                 imgWidth = new Array([]),
@@ -144,6 +146,7 @@
                     });
                 });
             });
+            $(".ui-bshowcase-container").children('img').eq(0).css({ opacity: 1 });
             $(".ui-bshowcase-bottom").mousemove(function (e) {
                 var position = $(this).position(),
                     width = $(this).width(),
@@ -157,29 +160,31 @@
                     }
                 }
             });
-            // Auto slide behavior
-            function doIt() {
-                if (here < count - 1) { here = here + 1; } else { here = 0; }
-                $('.ui-bshowcase-mid > img').fadeOut(speed, function () {
-                    var item = $(img[here].toString()).css({ height: height }).hide();
-                    $('.ui-bshowcase-mid').empty().append(item).children('img').fadeIn(speed);
-                    $('.ui-bshowcase-mid').animate({
-                        marginLeft: (width - borderSize - $('.ui-bshowcase-mid').width()) / 2
-                    }, speed);
-                    var val = 0;
-                    for (var i = 0; i < here; i++) {
-                        val = val + imgWidth[i] + marginSize + (thumbBorderSize * 2);
-                    }
-                    val = (val - ((width + borderSize * 2) / 2) + (imgWidth[i] / 2)) * -1;
-                    if (val > (midwidth - (width + borderSize * 2) + imgWidth[i]) * -1 && val < 0) {
-                        $('.ui-bshowcase-container').animate({ left: val }, speed);
-                    } else if (here == 0) {
-                        $('.ui-bshowcase-container').animate({ left: 0 }, speed);
-                    }
-                    $(".ui-bshowcase-container > img").css({ opacity: 0.4 }).eq(here).css({ opacity: 1 });
-                });
+            if (autoSlide) {
+                // Auto slide behavior
+                function doIt() {
+                    if (here < count - 1) { here = here + 1; } else { here = 0; }
+                    $('.ui-bshowcase-mid > img').fadeOut(speed, function () {
+                        var item = $(img[here].toString()).css({ height: height }).hide();
+                        $('.ui-bshowcase-mid').empty().append(item).children('img').fadeIn(speed);
+                        $('.ui-bshowcase-mid').animate({
+                            marginLeft: (width - borderSize - $('.ui-bshowcase-mid').width()) / 2
+                        }, speed);
+                        var val = 0;
+                        for (var i = 0; i < here; i++) {
+                            val = val + imgWidth[i] + marginSize + (thumbBorderSize * 2);
+                        }
+                        val = (val - ((width + borderSize * 2) / 2) + (imgWidth[i] / 2)) * -1;
+                        if (val > (midwidth - (width + borderSize * 2) + imgWidth[i]) * -1 && val < 0) {
+                            $('.ui-bshowcase-container').animate({ left: val }, speed);
+                        } else if (here == 0) {
+                            $('.ui-bshowcase-container').animate({ left: 0 }, speed);
+                        }
+                        $(".ui-bshowcase-container > img").css({ opacity: 0.4 }).eq(here).css({ opacity: 1 });
+                    });
+                }
+                var ints = setInterval(doIt, interval);
             }
-            var ints = setInterval(doIt, interval);
             // Allow chain
             return obj;
         },
@@ -219,6 +224,12 @@
             }
             // Don't allow any count more than image count
             this.options.count = Math.min(count, newCount);
+        },
+        autoSlide: function (newAutoSlide) {
+            if (newAutoSlide === undefined) {
+                return this.options.autoSlide;
+            }
+            this.options.autoSlide = newAutoSlide;
         }
     });
     $.extend($.ui.bshowcase, { version: "1.0.0" });
