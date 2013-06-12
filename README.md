@@ -92,7 +92,7 @@ Usage when user defined options:
           height: 320,                                  // Height of slider (default value is container's css)
           interval: 4000,                               // Interval between each image slide by milisecond (default 5000)
           count: 4,                                     // Image count you want to show (in this case last 2 img hidden)
-          speed: 800                                    // Speed of fade animation ('fast', 'slow', 200) // 200 as miliseconds
+          speed: 800,                                   // Speed of fade animation ('fast', 'slow', 200) // 200 as miliseconds
           autoSlide: false                              // Boolean for timed animations by given interval. def: true -
         });                                             // On false animates only when clicked..
       });
