@@ -30,7 +30,8 @@
             speed: 'fast',
             urlLeft: 'http://img842.imageshack.us/img842/613/arrowleftr.png',
             urlRight: 'http://img7.imageshack.us/img7/4593/arrowrightq.png',
-            autoSlide: true
+            autoSlide: true,
+            animation: 'slide'
         },
         _create: function () {
             var width = this.options.width || this.element.width(),
@@ -41,17 +42,18 @@
                 urlLeft = this.options.urlLeft,
                 urlRight = this.options.urlRight,
                 autoSlide = this.options.autoSlide,
+                animation = this.options.animation,
+                img = new Array([]),
                 imgLocation = new Array([]),
                 buttonWidth = 45,
                 here = 0,
-                left = 0,
-                img = "";
+                left = 0;
             // Cache Images and calgulate locations first
             for (i = 0; i < count; i++) {
                 // Cache Images
                 var elem = this.element.children('img').eq(i);
-                img = img + '<img src="' + elem.attr('src') + '" alt="' + elem.attr('alt') + '" />';
-                // Calgulate locations
+                img[i] = '<img src="' + elem.attr('src') + '" alt="' + elem.attr('alt') + '" />';
+                // Calgulate locations for a proper slide effect
                 imgLocation[i] = left;
                 left = left - width;
             }
@@ -82,7 +84,7 @@
                 display: 'inline-block',
                 zIndex: 0
             });
-            $('<div class="ui-bslider-container">' + img + '</div>').appendTo(mid).css({
+            $('<div class="ui-bslider-container">' + img.join('').toString() + '</div>').appendTo(mid).css({
                 margin: 0,
                 padding: 0,
                 width: width * count,
@@ -125,8 +127,15 @@
                 $(this).animate({ opacity: 0 }, 'fast');
             }).click(function (e) {
                 e.preventDefault();
-                if (here > 0) { here--; } else { here = count - 1; }
-                $('.ui-bslider-mid .ui-bslider-container').animate({ left: imgLocation[here] }, speed);
+                if (animation === 'fade') {
+                    $('.ui-bslider-container').fadeOut(speed, function () {
+                        if (here > 0) { here--; } else { here = count - 1; }
+                        $('.ui-bslider-container').css({ left: imgLocation[here] });
+                        $('.ui-bslider-container').fadeIn(speed);
+                    });
+                } else {
+                    $('.ui-bslider-container').animate({ left: imgLocation[here] }, speed);
+                }
             });
             // Append Right button
             $('<div class="ui-bslider-right"></div>').insertBefore(mid).css({
@@ -148,13 +157,20 @@
                 $(this).animate({ opacity: 0 }, 'fast');
             }).click(function (e) {
                 e.preventDefault();
-                if (here < count - 1) { here++; } else { here = 0; }
-                $('.ui-bslider-mid .ui-bslider-container').animate({ left: imgLocation[here] }, speed);
+                if (animation === 'fade') {
+                    $('.ui-bslider-container').fadeOut(speed, function () {
+                        if (here < count - 1) { here++; } else { here = 0; }
+                        $('.ui-bslider-container').css({ left: imgLocation[here] });
+                        $('.ui-bslider-container').fadeIn(speed);
+                    });
+                } else {
+                    $('.ui-bslider-container').animate({ left: imgLocation[here] }, speed);
+                }
             });
+            function doIt() { obj.find('.ui-bslider-right').click(); }
             if (autoSlide) {
                 // Auto slide behavior
-                function doIt() { obj.find('.ui-bslider-right').click(); }
-                var int = setInterval(doIt, interval);
+                var ints = setInterval(doIt, interval);
             }
             // Allow chain
             return obj;
@@ -213,6 +229,12 @@
                 return this.options.autoSlide;
             }
             this.options.autoSlide = newAutoSlide;
+        },
+        animation: function (newAnimation) {
+            if (newAnimation === undefined) {
+                return this.options.animation;
+            }
+            this.options.animation = newAnimation;
         }
     });
     $.extend($.ui.bslider, { version: "1.0.0" });
