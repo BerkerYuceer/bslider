@@ -58,8 +58,9 @@ Usage when user defined options:
           speed: 'slow',                                // Speed of slide animation ('fast', 'slow', 200) // 200 as miliseconds
           urlLeft: 'http://www.blabla.com/image4.jpg',  // You can define your own left, right button by giving img url 
           urlRigh: 'http://www.blabla.com/image5.jpg',  // they both has same widht as 45px
-          autoSlide: false                              // Boolean for timed animations by given interval. def: true -
-        });                                             // On false animates only when clicked..
+          autoSlide: false,                             // Boolean for timed animations by given interval. def: true - On false animates only when clicked..
+          animation: 'fade'                             // Animation type ('slide', 'fade') def: 'slide'
+        });                                             
       });
     </script>
 
