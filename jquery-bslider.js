@@ -2,26 +2,26 @@
 * Copyright (c) 2013 BERKER YUCEER
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
-* and associated documentation files (the "Software"), 
-* to deal in the Software without restriction, 
-* including without limitation the rights to 
-* use, copy, modify, merge, publish, distribute, sublicense, 
-* and/or sell copies of the Software, and to permit persons to whom 
+* and associated documentation files (the "Software"),
+* to deal in the Software without restriction,
+* including without limitation the rights to
+* use, copy, modify, merge, publish, distribute, sublicense,
+* and/or sell copies of the Software, and to permit persons to whom
 * the Software is furnished to do so, subject to the following conditions:
 *
-* The above copyright notice and this permission notice shall be included in all 
+* The above copyright notice and this permission notice shall be included in all
 * copies or substantial portions of the Software.
-* 
+*
 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-* INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
-* IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
-* DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
-* ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR 
+* INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+* IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+* DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+* ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 * OTHER DEALINGS IN THE SOFTWARE.
 */
-(function ($, undefined) {
-    $.widget("ui.bslider", {
+; (function ($, undefined) {
+    $.widget("fn.bslider", {
         options: {
             width: 0,
             height: 0,
@@ -59,12 +59,12 @@
             }
             this.element.empty(); // Clean
             // Slider
-            var obj = this.element.addClass("ui-bslider").css({
+            var bslider = this.element.addClass("bslider").css({
                 padding: 0,
                 width: width,
                 height: height,
-                /* Thanks to Seain Malkin 
-                selection disabled */
+                /* Thanks to Seain Malkin
+selection disabled */
                 'user-select': 'none',
                 '-o-user-select': 'none',
                 '-ms-user-select': 'none',
@@ -74,7 +74,7 @@
                 '-webkit-touch-callout': 'none'
             });
             // Append Image container
-            var mid = $('<div class="ui-bslider-mid"></div>').appendTo(obj).css({
+            var middle = $('<div class="bslider-mid"></div>').appendTo(bslider).css({
                 margin: 0,
                 padding: 0,
                 width: width,
@@ -84,7 +84,7 @@
                 display: 'inline-block',
                 zIndex: 0
             });
-            $('<div class="ui-bslider-container">' + img.join('').toString() + '</div>').appendTo(mid).css({
+            $('<div class="sliding-content">' + img.join('').toString() + '</div>').appendTo(middle).css({
                 margin: 0,
                 padding: 0,
                 width: width * count,
@@ -97,8 +97,8 @@
                 clear: 'none',
                 width: width,
                 height: height,
-                /* Thanks to Seain Malkin 
-                selection disabled */
+                /* Thanks to Seain Malkin
+selection disabled */
                 'user-select': 'none',
                 '-o-user-select': 'none',
                 '-ms-user-select': 'none',
@@ -108,7 +108,7 @@
                 '-webkit-touch-callout': 'none'
             });
             // Append Left button
-            $('<div class="ui-bslider-left"></div>').insertBefore(mid).css({
+            $('<div class="bslider-left"></div>').insertBefore(middle).css({
                 float: 'left',
                 clear: 'none',
                 margin: 0,
@@ -128,17 +128,17 @@
             }).click(function (e) {
                 e.preventDefault();
                 if (animation === 'fade') {
-                    $('.ui-bslider-container').fadeOut(speed, function () {
+                    $('.sliding-content').fadeOut(speed, function () {
                         if (here > 0) { here--; } else { here = count - 1; }
-                        $('.ui-bslider-container').css({ left: imgLocation[here] });
-                        $('.ui-bslider-container').fadeIn(speed);
+                        $('.sliding-content').css({ left: imgLocation[here] });
+                        $('.sliding-content').fadeIn(speed);
                     });
                 } else {
-                    $('.ui-bslider-container').animate({ left: imgLocation[here] }, speed);
+                    $('.sliding-content').animate({ left: imgLocation[here] }, speed);
                 }
             });
             // Append Right button
-            $('<div class="ui-bslider-right"></div>').insertBefore(mid).css({
+            $('<div class="bslider-right"></div>').insertBefore(middle).css({
                 float: 'right',
                 clear: 'none',
                 margin: 0,
@@ -158,26 +158,26 @@
             }).click(function (e) {
                 e.preventDefault();
                 if (animation === 'fade') {
-                    $('.ui-bslider-container').fadeOut(speed, function () {
+                    $('.sliding-content').fadeOut(speed, function () {
                         if (here < count - 1) { here++; } else { here = 0; }
-                        $('.ui-bslider-container').css({ left: imgLocation[here] });
-                        $('.ui-bslider-container').fadeIn(speed);
+                        $('.sliding-content').css({ left: imgLocation[here] });
+                        $('.sliding-content').fadeIn(speed);
                     });
                 } else {
-                    $('.ui-bslider-container').animate({ left: imgLocation[here] }, speed);
+                    $('.sliding-content').animate({ left: imgLocation[here] }, speed);
                 }
             });
-            function doIt() { obj.find('.ui-bslider-right').click(); }
+            function doIt() { bslider.find('.bslider-right').click(); }
             if (autoSlide) {
                 // Auto slide behavior
                 var ints = setInterval(doIt, interval);
             }
             // Allow chain
-            return obj;
+            return bslider;
         },
         _destroy: function () {
             this.element.empty(); // Clean
-            this.element.removeClass("ui-bslider");
+            this.element.removeClass("fn-bslider");
             this.element.append(img);
             return this.element;
         },
@@ -237,5 +237,5 @@
             this.options.animation = newAnimation;
         }
     });
-    $.extend($.ui.bslider, { version: "1.0.0" });
+    $.extend($.fn.bslider, { version: "1.0.1" });
 })(jQuery);
