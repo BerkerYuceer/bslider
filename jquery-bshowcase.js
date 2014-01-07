@@ -20,7 +20,7 @@
 * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR 
 * OTHER DEALINGS IN THE SOFTWARE.
 */
-; (function ($, undefined) {
+;(function ($, undefined) {
     $.widget("fn.bshowcase", {
         options: {
             width: 0,
@@ -40,22 +40,22 @@
                 autoSlide = this.options.autoSlide,
                 position = this.options.position,
                 img = new Array([]),
-            // Images
+                // Images
                 imgWidth = new Array([]),
                 imgHeight = new Array([]),
                 ratioHeight = 0,
                 ratioWidth = 0,
                 ratio = 0,
-            // Thumbnails
+                // Thumbnails
                 tWidth = new Array([]),
                 tHeight = new Array([]),
                 thumbWidth = 0,
                 thumbHeight = 0,
                 thumbRatio = 0,
-            // Container
+                // Container
                 containerWidth = 0,
                 containerHeight = 0,
-            // Borders & Margins
+                // Borders & Margins
                 thumbBorderSize = 4,
                 borderSize = 5,
                 marginSize = 5,
@@ -94,17 +94,17 @@
             }
             this.element.empty(); // Clean
             // Slider
-            var bshowcase = this.element.addClass("fn-bshowcase").css({
+            var obj = this.element.addClass("ui-bshowcase").css({
                 padding: 0,
                 width: width,
                 height: height
             });
             // Append Main Image Container
-            var mid = $('<div class="ui-mid">' + img[0] + '</div>').appendTo(bshowcase);
+            var mid = $('<div class="ui-bshowcase-mid">' + img[0] + '</div>').appendTo(obj);
             // Append Container Holder
-            var holder = $('<div class="ui-holder"></div>').appendTo(bshowcase);
+            var holder = $('<div class="ui-bshowcase-holder"></div>').appendTo(obj);
             // Append Thumbnail Image Container
-            var container = $('<div class="ui-container"></div>').appendTo(holder);
+            var container = $('<div class="ui-bshowcase-container"></div>').appendTo(holder);
             // Apply CSS
             // Top alinged thumb container
             if (position === 'top') {
@@ -126,12 +126,14 @@
                     clear: 'both',
                     margin: holder.height() + 'px 0 0 0',
                     padding: 0,
+                    maxWidth: imgWidth[0],
                     maxHeight: imgHeight[0],
                     marginLeft: (width - borderSize * 2 - imgWidth[0]) / 2,
                     overflow: 'hidden',
                     position: 'absolute',
                     display: 'block',
-                    'box-shadow': '0 0 4px black, 0 1px 4px black',
+                    border: '5px solid white',
+                    'box-shadow': '0 0 4px silver, 0 1px 4px silver',
                     zIndex: 0
                 }).children('img').css({ height: imgHeight[0] });
                 container.css({
@@ -144,35 +146,36 @@
                     position: 'relative',
                     zIndex: -1
                 });
-                container.append(img.join('').toString()).children('img').each(function () {
+                container.append(img.join('').toString()).children('img').each(function (){
                     $(this).css({
                         float: 'left',
                         clear: 'none',
                         cursor: 'pointer',
                         opacity: 0.4,
-                        marginTop: (holder.height() - (tHeight[$(".ui-container > img").index(this)] + thumbBorderSize * 2 + marginSize)) / 2,
+                        marginTop: (holder.height() - (tHeight[$(".ui-bshowcase-container > img").index(this)] + thumbBorderSize * 2 + marginSize)) / 2,
                         marginLeft: 5,
                         marginRight: 0,
                         marginBottom: 0,
-                        width: tWidth[$(".ui-container > img").index(this)],
-                        height: tHeight[$(".ui-container > img").index(this)],
-                        'box-shadow': '0 0 4px black',
+                        width: tWidth[$(".ui-bshowcase-container > img").index(this)],
+                        height: tHeight[$(".ui-bshowcase-container > img").index(this)],
+                        border: '4px solid white',
+                        'box-shadow': '0 0 4px gray',
                         'list-style': 'none'
                     }).hover(function () {
-                        $(".ui-container > img").css({ opacity: 0.4 });
+                        $(".ui-bshowcase-container > img").css({ opacity: 0.4 });
                         $(this).css({ opacity: 1 });
                     }).click(function () {
-                        here = $(".ui-container > img").index(this);
-                        $('.ui-mid > img').fadeOut(speed, function () {
+                        here = $(".ui-bshowcase-container > img").index(this);
+                        $('.ui-bshowcase-mid > img').fadeOut(speed, function () {
                             var item = $(img[here]).css({ height: imgHeight[here], width: imgWidth[here] }).hide();
-                            $('.ui-mid').empty().append(item).children('img').fadeIn(speed);
-                            $('.ui-mid').animate({
+                            $('.ui-bshowcase-mid').empty().append(item).children('img').fadeIn(speed);
+                            $('.ui-bshowcase-mid').animate({
                                 marginLeft: (width - borderSize * 2 - imgWidth[here]) / 2
                             }, speed);
                         });
                     });
                 });
-                // Left alinged thumb container
+            // Left alinged thumb container
             } else if (position === 'left') {
                 holder.css({
                     float: 'left',
@@ -192,12 +195,14 @@
                     margin: 0,
                     padding: 0,
                     maxHeight: imgHeight[0],
+                    maxWidth: imgWidth[0],
                     marginTop: (height - borderSize - imgHeight[0]) / 2,
                     marginLeft: (holder.width() + (width - borderSize - imgWidth[0])) / 2,
                     overflow: 'hidden',
                     position: 'absolute',
                     display: 'block',
-                    'box-shadow': '0 0 4px black, 0 1px 4px black',
+                    border: '5px solid white',
+                    'box-shadow': '0 0 4px silver, 0 1px 4px silver',
                     zIndex: 0
                 }).children('img').css({ width: imgWidth[0] });
                 container.css({
@@ -209,36 +214,37 @@
                     position: 'relative',
                     zIndex: -1
                 });
-                container.append(img.join('').toString()).children('img').each(function () {
+                container.append(img.join('').toString()).children('img').each(function (){
                     $(this).css({
                         float: 'left',
                         clear: 'both',
                         cursor: 'pointer',
                         opacity: 0.4,
                         marginTop: 5,
-                        marginLeft: Math.floor((holder.width() - (tWidth[$(".ui-container > img").index(this)] + thumbBorderSize * 2 + marginSize)) / 2),
+                        marginLeft: Math.floor((holder.width() - (tWidth[$(".ui-bshowcase-container > img").index(this)] + thumbBorderSize * 2 + marginSize)) / 2),
                         marginRight: 0,
                         marginBottom: 0,
-                        width: tWidth[$(".ui-container > img").index(this)],
-                        height: tHeight[$(".ui-container > img").index(this)],
-                        'box-shadow': '0 0 4px black',
+                        width: tWidth[$(".ui-bshowcase-container > img").index(this)],
+                        height: tHeight[$(".ui-bshowcase-container > img").index(this)],
+                        border: '4px solid white',
+                        'box-shadow': '0 0 4px gray',
                         'list-style': 'none'
                     }).hover(function () {
-                        $(".ui-container > img").css({ opacity: 0.4 });
+                        $(".ui-bshowcase-container > img").css({ opacity: 0.4 });
                         $(this).css({ opacity: 1 });
                     }).click(function () {
-                        here = $(".ui-container > img").index(this);
-                        $('.ui-mid > img').fadeOut(speed, function () {
+                        here = $(".ui-bshowcase-container > img").index(this);
+                        $('.ui-bshowcase-mid > img').fadeOut(speed, function () {
                             var item = $(img[here]).css({ height: imgHeight[here], width: imgWidth[here] }).hide();
-                            $('.ui-mid').empty().append(item).children('img').fadeIn(speed);
-                            $('.ui-mid').animate({
-                                marginTop: (height - borderSize - $('.ui-mid').height()) / 2,
+                            $('.ui-bshowcase-mid').empty().append(item).children('img').fadeIn(speed);
+                            $('.ui-bshowcase-mid').animate({
+                                marginTop: (height - borderSize - $('.ui-bshowcase-mid').height()) / 2,
                                 marginLeft: (holder.width() + (width - borderSize - imgWidth[here])) / 2
                             }, speed);
                         });
                     });
                 });
-                // Right alinged thumb container
+            // Right alinged thumb container
             } else if (position === 'right') {
                 holder.css({
                     float: 'right',
@@ -263,7 +269,8 @@
                     overflow: 'hidden',
                     position: 'absolute',
                     display: 'block',
-                    'box-shadow': '0 0 4px black, 0 1px 4px black',
+                    border: '5px solid white',
+                    'box-shadow': '0 0 4px silver, 0 1px 4px silver',
                     zIndex: 0
                 }).children('img').css({ width: imgWidth[0] });
                 container.css({
@@ -275,35 +282,37 @@
                     position: 'relative',
                     zIndex: -1
                 });
-                container.append(img.join('').toString()).children('img').each(function () {
+                container.append(img.join('').toString()).children('img').each(function (){
                     $(this).css({
                         float: 'left',
                         clear: 'both',
                         cursor: 'pointer',
                         opacity: 0.4,
                         marginTop: 5,
-                        marginLeft: (holder.width() - (tWidth[$(".ui-container > img").index(this)] + thumbBorderSize * 2 + marginSize)) / 2,
+                        marginLeft: (holder.width() - (tWidth[$(".ui-bshowcase-container > img").index(this)] + thumbBorderSize * 2 + marginSize)) / 2,
                         marginRight: 0,
                         marginBottom: 0,
-                        width: tWidth[$(".ui-container > img").index(this)],
-                        height: tHeight[$(".ui-container > img").index(this)],
+                        width: tWidth[$(".ui-bshowcase-container > img").index(this)],
+                        height: tHeight[$(".ui-bshowcase-container > img").index(this)],
+                        border: '4px solid white',
+                        'box-shadow': '0 0 4px gray',
                         'list-style': 'none'
                     }).hover(function () {
-                        $(".ui-container > img").css({ opacity: 0.4 });
+                        $(".ui-bshowcase-container > img").css({ opacity: 0.4 });
                         $(this).css({ opacity: 1 });
                     }).click(function () {
-                        here = $(".ui-container > img").index(this);
-                        $('.ui-mid > img').fadeOut(speed, function () {
+                        here = $(".ui-bshowcase-container > img").index(this);
+                        $('.ui-bshowcase-mid > img').fadeOut(speed, function () {
                             var item = $(img[here]).css({ height: imgHeight[here], width: imgWidth[here] }).hide();
-                            $('.ui-mid').empty().append(item).children('img').fadeIn(speed);
-                            $('.ui-mid').animate({
+                            $('.ui-bshowcase-mid').empty().append(item).children('img').fadeIn(speed);
+                            $('.ui-bshowcase-mid').animate({
                                 marginTop: (height - borderSize - imgHeight[here]) / 2,
                                 marginLeft: (width - borderSize - holder.width() - imgWidth[here]) / 2
                             }, speed);
                         });
                     });
                 });
-                // Bottom alinged thumb container as Default
+            // Bottom alinged thumb container as Default
             } else {
                 holder.css({
                     float: 'left',
@@ -321,13 +330,15 @@
                     clear: 'both',
                     margin: 0,
                     padding: 0,
+                    maxWidth: imgWidth[0],
                     maxHeight: imgHeight[0],
                     marginLeft: (width - borderSize * 2 - imgWidth[0]) / 2,
                     marginTop: (height - borderSize * 2 - imgHeight[0] - holder.height) / 2,
                     overflow: 'hidden',
                     position: 'relative',
                     display: 'block',
-                    'box-shadow': '0 0 4px black, 0 1px 4px black',
+                    border: '5px solid white',
+                    'box-shadow': '0 0 4px silver, 0 1px 4px silver',
                     zIndex: 0
                 }).children('img').css({ height: imgHeight[0] });
                 container.css({
@@ -340,29 +351,30 @@
                     position: 'relative',
                     zIndex: -1
                 });
-                container.append(img.join('').toString()).children('img').each(function () {
+                container.append(img.join('').toString()).children('img').each(function (){
                     $(this).css({
                         float: 'left',
                         clear: 'none',
                         cursor: 'pointer',
                         opacity: 0.4,
-                        marginTop: (holder.height() - (tHeight[$(".ui-container > img").index(this)] + thumbBorderSize * 2 + marginSize)) / 2,
+                        marginTop: (holder.height() - (tHeight[$(".ui-bshowcase-container > img").index(this)] + thumbBorderSize * 2 + marginSize)) / 2,
                         marginLeft: 5,
                         marginRight: 0,
                         marginBottom: 0,
-                        width: tWidth[$(".ui-container > img").index(this)],
-                        height: tHeight[$(".ui-container > img").index(this)],
+                        width: tWidth[$(".ui-bshowcase-container > img").index(this)],
+                        height: tHeight[$(".ui-bshowcase-container > img").index(this)],
+                        border: '4px solid white',
                         'box-shadow': '0 0 4px gray',
                         'list-style': 'none'
                     }).hover(function () {
-                        $(".ui-container > img").css({ opacity: 0.4 });
+                        $(".ui-bshowcase-container > img").css({ opacity: 0.4 });
                         $(this).css({ opacity: 1 });
                     }).click(function () {
-                        here = $(".ui-container > img").index(this);
-                        $('.ui-mid > img').fadeOut(speed, function () {
+                        here = $(".ui-bshowcase-container > img").index(this);
+                        $('.ui-bshowcase-mid > img').fadeOut(speed, function () {
                             var item = $(img[here]).css({ height: imgHeight[here], width: imgWidth[here] }).hide();
-                            $('.ui-mid').empty().append(item).children('img').fadeIn(speed);
-                            $('.ui-mid').animate({
+                            $('.ui-bshowcase-mid').empty().append(item).children('img').fadeIn(speed);
+                            $('.ui-bshowcase-mid').animate({
                                 marginLeft: (width - borderSize * 2 - imgWidth[here]) / 2
                             }, speed);
                         });
@@ -370,32 +382,32 @@
                 });
             }
             // Mouse move events vertical or horizontal!
-            $(".ui-container").children('img').eq(0).css({ opacity: 1 });
-            if (position === 'left' || position === 'right') {
-                $(".ui-holder").mousemove(function (e) {
+            $(".ui-bshowcase-container").children('img').eq(0).css({ opacity: 1 });
+            if (position === 'left' || position === 'right'){
+                $(".ui-bshowcase-holder").mousemove(function (e) {
                     var position = $(this).position(),
                         height = $(this).height(),
                         minY = position.top + Math.round(height / 4),
                         maxY = minY + height,
-                        tickSize = height / containerHeight;
+                        tickSize =  height / containerHeight;
                     if (e.pageY >= minY && e.pageY <= maxY) {
                         var val = ((e.pageY - minY) / tickSize) * -1;
                         if (val > (containerHeight - height) * -1) {
-                            $('.ui-container').css({ top: val });
+                            $('.ui-bshowcase-container').css({ top: val });
                         }
                     }
                 });
             } else {
-                $(".ui-holder").mousemove(function (e) {
+                $(".ui-bshowcase-holder").mousemove(function (e) {
                     var position = $(this).position(),
                         width = $(this).width(),
                         minX = position.left + (width / 4),
                         maxX = minX + width,
-                        tickSize = width / containerWidth;
+                        tickSize =  width / containerWidth;
                     if (e.pageX >= minX && e.pageX <= maxX) {
                         var val = ((e.pageX - minX) / tickSize) * -1;
                         if (val > (containerWidth - width) * -1) {
-                            $('.ui-container').css({ left: val });
+                            $('.ui-bshowcase-container').css({ left: val });
                         }
                     }
                 });
@@ -403,17 +415,17 @@
             // Auto slide behavior
             function doItVertical() {
                 if (here < count - 1) { here = here + 1; } else { here = 0; }
-                $('.fn-bshowcase > .ui-mid > img').fadeOut(speed, function () {
+                $('.ui-bshowcase-mid > img').fadeOut(speed, function () {
                     var item = $(img[here].toString()).css({ height: imgHeight[here], width: imgWidth[here] }).hide();
-                    $('.fn-bshowcase > .ui-mid').empty().append(item).children('img').fadeIn(speed);
+                    $('.ui-bshowcase-mid').empty().append(item).children('img').fadeIn(speed);
                     var marginL;
-                    if (position === 'left') {
+                    if (position === 'left'){
                         marginL = (holder.width() + (width - borderSize - imgWidth[here])) / 2;
                     } else if (position === 'right') {
                         marginL = (width - borderSize - holder.width() - imgWidth[here]) / 2;
                     }
-                    $('.fn-bshowcase > .ui-mid').animate({
-                        marginTop: (height - borderSize - $('.ui-mid').height()) / 2,
+                    $('.ui-bshowcase-mid').animate({
+                        marginTop: (height - borderSize - $('.ui-bshowcase-mid').height()) / 2,
                         marginLeft: marginL
                     }, speed);
                     var val = 0;
@@ -422,21 +434,21 @@
                     }
                     val = (val - ((height + borderSize * 2) / 2) + (tHeight[i] / 2)) * -1;
                     if (val > (containerHeight - (height + borderSize * 2) + tHeight[i]) * -1 && val < 0) {
-                        $('.fn-bshowcase > .ui-container').animate({ top: val }, speed);
+                        $('.ui-bshowcase-container').animate({ top: val }, speed);
                     } else if (here === 0 || here === 1 || here === 2) {
-                        $('.fn-bshowcase > .ui-container').animate({ top: 0 }, speed);
+                        $('.ui-bshowcase-container').animate({ top: 0 }, speed);
                     }
-                    $(".fn-bshowcase > .ui-container > img").css({ opacity: 0.4 }).eq(here).css({ opacity: 1 });
+                    $(".ui-bshowcase-container > img").css({ opacity: 0.4 }).eq(here).css({ opacity: 1 });
                 });
             }
             // Auto slide behavior
             function doItHorizontal() {
                 if (here < count - 1) { here = here + 1; } else { here = 0; }
-                $('.fn-bshowcase > .ui-mid > img').fadeOut(speed, function () {
+                $('.ui-bshowcase-mid > img').fadeOut(speed, function () {
                     var item = $(img[here].toString()).css({ height: imgHeight[here], width: imgWidth[here] }).hide();
-                    $('.fn-bshowcase > .ui-mid').empty().append(item).children('img').fadeIn(speed);
-                    $('.fn-bshowcase > .ui-mid').animate({
-                        marginLeft: (width - $('.fn-bshowcase > .ui-mid').width()) / 2
+                    $('.ui-bshowcase-mid').empty().append(item).children('img').fadeIn(speed);
+                    $('.ui-bshowcase-mid').animate({
+                        marginLeft: (width - borderSize - $('.ui-bshowcase-mid').width()) / 2
                     }, speed);
                     var val = 0;
                     for (var i = 0; i < here; i++) {
@@ -444,11 +456,11 @@
                     }
                     val = (val - ((width + borderSize * 2) / 2) + (tWidth[i] / 2)) * -1;
                     if (val > (containerWidth - (width + borderSize * 2) + tWidth[i]) * -1 && val < 0) {
-                        $('.fn-bshowcase > .ui-container').animate({ left: val }, speed);
+                        $('.ui-bshowcase-container').animate({ left: val }, speed);
                     } else if (here === 0 || here === 1 || here === 2) {
-                        $('.fn-bshowcase > .ui-container').animate({ left: 0 }, speed);
+                        $('.ui-bshowcase-container').animate({ left: 0 }, speed);
                     }
-                    $(".fn-bshowcase > .ui-container > img").css({ opacity: 0.4 }).eq(here).css({ opacity: 1 });
+                    $(".ui-bshowcase-container > img").css({ opacity: 0.4 }).eq(here).css({ opacity: 1 });
                 });
             }
             if (autoSlide) {
@@ -461,11 +473,11 @@
                 }
             }
             // Allow chain
-            return bshowcase;
+            return obj;
         },
         _destroy: function () {
             this.element.empty(); // Clean
-            this.element.removeClass("fn-bshowcase");
+            this.element.removeClass("ui-bshowcase");
             this.element.append(img);
             return this.element;
         },
@@ -506,8 +518,8 @@
             }
             this.options.autoSlide = newAutoSlide;
         },
-        position: function (newPosition) {
-            if (newPosition === undefined) {
+        position: function (newPosition){
+            if(newPosition === undefined) {
                 return this.options.position;
             }
             this.options.position = newPosition;
