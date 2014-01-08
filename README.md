@@ -54,7 +54,7 @@ Usage when user defined options:
           width: 380,                                   // Width of slider (default value is container's css)
           height: 225,                                  // Height of slider (default value is container's css)
           interval: 5000,                               // Interval between each image slide by milisecond (default 5000)
-          count: 3,                                     // Image count you want to show (in this case last 3 img hidden)
+          count: 4,                                     // Image count you want to show (in this case last 2 img hidden)
           speed: 'slow',                                // Speed of slide animation ('fast', 'slow', 200) // 200 as miliseconds
           urlLeft: 'http://www.blabla.com/image4.jpg',  // You can define your own left, right button by giving img url 
           urlRigh: 'http://www.blabla.com/image5.jpg',  // they both has same widht as 45px
@@ -63,6 +63,11 @@ Usage when user defined options:
         });                                             
       });
     </script>
+
+bshowcase
+=======
+
+Be Showcase is a quick & easy to set up image slider with thumbnails, based on html markup and jquery..
 
 Usage for bshowcase:
     
@@ -84,7 +89,7 @@ Usage without any option given (Using defaults):
       });
     </script>
 
-Usage when user defined options:
+Usage with user defined options:
     
     <script type="text/javascript">
       $(document).ready(function(){
@@ -93,9 +98,13 @@ Usage when user defined options:
           height: 320,                                  // Height of slider (default value is container's css)
           interval: 4000,                               // Interval between each image slide by milisecond (default 5000)
           count: 4,                                     // Image count you want to show (in this case last 2 img hidden)
-          speed: 800,                                   // Speed of fade animation ('fast', 'slow', 200) // 200 as miliseconds
+          speed: 750,                                   // Speed of fade animation ('fast', 'slow', 200) // 200 as miliseconds
           autoSlide: false,                             // Boolean for timed animations by given interval. def: true - On false; animates only when clicked..
-          position: 'right'                             // Position of the gallery def: bottom
+          position: 'right'                             // Position of the thumbnail gallery def: bottom
+          borderColor: 'white',                         // Border color of mainframe and thumbnails
+          shadowColor: 'silver',                        // Shadow color of mainframe and thumbnails
+          borderSize: 10,                               // Border size of mainframe
+          thumbBorderSize: 6                            // Border size of thumbnails
         });
       });
     </script>
