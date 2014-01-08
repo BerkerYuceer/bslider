@@ -26,10 +26,14 @@
             width: 0,
             height: 0,
             interval: 5000,
-            speed: 1000,
+            speed: 750,
             count: 0,
             autoSlide: true,
-            position: 'bottom'
+            position: 'bottom',
+            borderColor: 'white',
+            shadowColor: 'silver',
+            borderSize: 0,
+            thumbBorderSize: 0
         },
         _create: function () {
             var width = this.options.width || this.element.width(),
@@ -39,6 +43,8 @@
                 speed = this.options.speed,
                 autoSlide = this.options.autoSlide,
                 position = this.options.position,
+                borderColor = this.options.borderColor,
+                shadowColor = this.options.shadowColor,
                 img = new Array([]),
                 // Images
                 imgWidth = new Array([]),
@@ -56,8 +62,8 @@
                 containerWidth = 0,
                 containerHeight = 0,
                 // Borders & Margins
-                thumbBorderSize = 4,
-                borderSize = 5,
+                thumbBorderSize = this.options.thumbBorderSize || 4,
+                borderSize = this.options.borderSize || 5,
                 marginSize = 5,
                 here = 0,
                 left = 0;
@@ -66,8 +72,8 @@
                 // Cache Images
                 var elem = this.element.children('img').eq(i);
                 // Calgulate AspectRatio
-                ratioWidth = (width - Math.round(width / 6) - thumbBorderSize * 2 - borderSize * 2 - marginSize * 4) / elem.width();
-                ratioHeight = (height - Math.round(height / 6) - thumbBorderSize * 2 - borderSize * 2 - marginSize * 4) / elem.height();
+                ratioWidth = (width - Math.round(width / 6) - (thumbBorderSize * 2) - (borderSize * 2) - (marginSize * 2)) / elem.width();
+                ratioHeight = (height - Math.round(height / 6) - (thumbBorderSize * 2) - (borderSize * 2) - (marginSize * 2)) / elem.height();
                 // Choose the smaller ratio
                 if (ratioWidth > ratioHeight)
                 { ratio = ratioHeight; }
@@ -93,6 +99,9 @@
                 img[i] = '<img src="' + elem.attr('src') + '" alt="' + elem.attr('alt') + '" />';
             }
             this.element.empty(); // Clean
+            // Set default slider position to use later
+            var defaultStartPositionH = ((width-(borderSize*2))/2)-((imgWidth[0]+(thumbBorderSize*2))/2);
+            var defaultStartPositionV = ((height-(borderSize*2))/2)-((imgHeight[0]+(thumbBorderSize*2))/2);
             // Slider
             var obj = this.element.addClass("ui-bshowcase").css({
                 padding: 0,
@@ -132,14 +141,14 @@
                     overflow: 'hidden',
                     position: 'absolute',
                     display: 'block',
-                    border: '5px solid white',
-                    'box-shadow': '0 0 4px silver, 0 1px 4px silver',
+                    border: borderSize + 'px solid ' + borderColor,
+                    'box-shadow': '0 0 4px '+ shadowColor + ', 0 1px 4px ' + shadowColor,
                     zIndex: 0
                 }).children('img').css({ height: imgHeight[0] });
                 container.css({
-                    float: 'left',
                     padding: 0,
                     margin: 0,
+                    left: ((width-(borderSize*2))/2 - (imgWidth[0]/2)),
                     width: containerWidth,
                     height: Math.abs(height / 6) + borderSize * 2 + marginSize * 2,
                     display: 'block',
@@ -158,8 +167,8 @@
                         marginBottom: 0,
                         width: tWidth[$(".ui-bshowcase-container > img").index(this)],
                         height: tHeight[$(".ui-bshowcase-container > img").index(this)],
-                        border: '4px solid white',
-                        'box-shadow': '0 0 4px gray',
+                        border: thumbBorderSize + 'px solid ' + borderColor,
+                        'box-shadow': '0 0 4px ' + shadowColor,
                         'list-style': 'none'
                     }).hover(function () {
                         $(".ui-bshowcase-container > img").css({ opacity: 0.4 });
@@ -170,7 +179,7 @@
                             var item = $(img[here]).css({ height: imgHeight[here], width: imgWidth[here] }).hide();
                             $('.ui-bshowcase-mid').empty().append(item).children('img').fadeIn(speed);
                             $('.ui-bshowcase-mid').animate({
-                                marginLeft: (width - borderSize * 2 - imgWidth[here]) / 2
+                                marginLeft: (width - (imgWidth[here] + (borderSize * 2))) / 2
                             }, speed);
                         });
                     });
@@ -196,19 +205,20 @@
                     padding: 0,
                     maxHeight: imgHeight[0],
                     maxWidth: imgWidth[0],
-                    marginTop: (height - borderSize - imgHeight[0]) / 2,
-                    marginLeft: (holder.width() + (width - borderSize - imgWidth[0])) / 2,
+                    marginTop: (height - (imgHeight[0]+borderSize*2)) / 2,
+                    marginLeft: holder.width() + ((width - (imgWidth[0]+borderSize*2)) / 2),
                     overflow: 'hidden',
                     position: 'absolute',
                     display: 'block',
-                    border: '5px solid white',
-                    'box-shadow': '0 0 4px silver, 0 1px 4px silver',
+                    border: borderSize + 'px solid ' + borderColor,
+                    'box-shadow': '0 0 4px ' + shadowColor + ', 0 1px 4px ' + shadowColor,
                     zIndex: 0
                 }).children('img').css({ width: imgWidth[0] });
                 container.css({
                     float: 'left',
                     padding: 0,
-                    margin: 0,
+                    margin: '0 0 0 4px',
+                    top: ((height-(borderSize*2))/2 - (imgHeight[0]/2)),
                     height: containerHeight,
                     display: 'block',
                     position: 'relative',
@@ -226,8 +236,8 @@
                         marginBottom: 0,
                         width: tWidth[$(".ui-bshowcase-container > img").index(this)],
                         height: tHeight[$(".ui-bshowcase-container > img").index(this)],
-                        border: '4px solid white',
-                        'box-shadow': '0 0 4px gray',
+                        border: thumbBorderSize + 'px solid ' + borderColor,
+                        'box-shadow': '0 0 4px ' + shadowColor,
                         'list-style': 'none'
                     }).hover(function () {
                         $(".ui-bshowcase-container > img").css({ opacity: 0.4 });
@@ -238,8 +248,8 @@
                             var item = $(img[here]).css({ height: imgHeight[here], width: imgWidth[here] }).hide();
                             $('.ui-bshowcase-mid').empty().append(item).children('img').fadeIn(speed);
                             $('.ui-bshowcase-mid').animate({
-                                marginTop: (height - borderSize - $('.ui-bshowcase-mid').height()) / 2,
-                                marginLeft: (holder.width() + (width - borderSize - imgWidth[here])) / 2
+                                marginTop: (height - (imgHeight[here]+borderSize*2)) / 2,
+                                marginLeft: holder.width() + ((width - (imgWidth[here]+borderSize*2)) / 2)
                             }, speed);
                         });
                     });
@@ -264,19 +274,20 @@
                     padding: 0,
                     maxHeight: imgHeight[0],
                     maxWidth: imgWidth[0],
-                    marginTop: (height - borderSize - imgHeight[0]) / 2,
-                    marginLeft: (width - borderSize - holder.width() - imgWidth[0]) / 2,
+                    marginTop: (height - (imgHeight[0]+borderSize*2)) / 2,
+                    marginLeft: (width - (imgWidth[0]+borderSize*2)-holder.width()) / 2,
                     overflow: 'hidden',
                     position: 'absolute',
                     display: 'block',
-                    border: '5px solid white',
-                    'box-shadow': '0 0 4px silver, 0 1px 4px silver',
+                    border: borderSize + 'px solid ' + borderColor,
+                    'box-shadow': '0 0 4px ' + shadowColor + ', 0 1px 4px ' + shadowColor,
                     zIndex: 0
                 }).children('img').css({ width: imgWidth[0] });
                 container.css({
                     float: 'left',
                     padding: 0,
                     margin: 0,
+                    top: ((height-(borderSize*2))/2 - (imgHeight[0]/2)),
                     height: containerHeight,
                     display: 'block',
                     position: 'relative',
@@ -294,8 +305,8 @@
                         marginBottom: 0,
                         width: tWidth[$(".ui-bshowcase-container > img").index(this)],
                         height: tHeight[$(".ui-bshowcase-container > img").index(this)],
-                        border: '4px solid white',
-                        'box-shadow': '0 0 4px gray',
+                        border: thumbBorderSize + 'px solid '+ borderColor,
+                        'box-shadow': '0 0 4px ' + shadowColor,
                         'list-style': 'none'
                     }).hover(function () {
                         $(".ui-bshowcase-container > img").css({ opacity: 0.4 });
@@ -306,8 +317,8 @@
                             var item = $(img[here]).css({ height: imgHeight[here], width: imgWidth[here] }).hide();
                             $('.ui-bshowcase-mid').empty().append(item).children('img').fadeIn(speed);
                             $('.ui-bshowcase-mid').animate({
-                                marginTop: (height - borderSize - imgHeight[here]) / 2,
-                                marginLeft: (width - borderSize - holder.width() - imgWidth[here]) / 2
+                                marginTop: (height - (imgHeight[here]+borderSize*2)) / 2,
+                                marginLeft: (width - (imgWidth[here]+borderSize*2)-holder.width()) / 2
                             }, speed);
                         });
                     });
@@ -337,14 +348,14 @@
                     overflow: 'hidden',
                     position: 'relative',
                     display: 'block',
-                    border: '5px solid white',
-                    'box-shadow': '0 0 4px silver, 0 1px 4px silver',
+                    border: borderSize + 'px solid ' + borderColor,
+                    'box-shadow': '0 0 4px ' + shadowColor + ', 0 1px 4px ' + shadowColor,
                     zIndex: 0
                 }).children('img').css({ height: imgHeight[0] });
                 container.css({
-                    float: 'left',
                     padding: 0,
                     margin: 0,
+                    left: ((width-(borderSize*2))/2 - (imgWidth[0]/2)),
                     width: containerWidth,
                     height: Math.abs(height / 6) + borderSize * 2 + marginSize,
                     display: 'block',
@@ -363,8 +374,8 @@
                         marginBottom: 0,
                         width: tWidth[$(".ui-bshowcase-container > img").index(this)],
                         height: tHeight[$(".ui-bshowcase-container > img").index(this)],
-                        border: '4px solid white',
-                        'box-shadow': '0 0 4px gray',
+                        border: thumbBorderSize + 'px solid '+ borderColor,
+                        'box-shadow': '0 0 4px ' + shadowColor,
                         'list-style': 'none'
                     }).hover(function () {
                         $(".ui-bshowcase-container > img").css({ opacity: 0.4 });
@@ -375,7 +386,7 @@
                             var item = $(img[here]).css({ height: imgHeight[here], width: imgWidth[here] }).hide();
                             $('.ui-bshowcase-mid').empty().append(item).children('img').fadeIn(speed);
                             $('.ui-bshowcase-mid').animate({
-                                marginLeft: (width - borderSize * 2 - imgWidth[here]) / 2
+                                marginLeft: (width - (imgWidth[here]+(borderSize*2))) / 2
                             }, speed);
                         });
                     });
@@ -420,23 +431,23 @@
                     $('.ui-bshowcase-mid').empty().append(item).children('img').fadeIn(speed);
                     var marginL;
                     if (position === 'left'){
-                        marginL = (holder.width() + (width - borderSize - imgWidth[here])) / 2;
+                        marginL = width - (imgWidth[here]+(borderSize*2))/ 2 - holder.width();
                     } else if (position === 'right') {
-                        marginL = (width - borderSize - holder.width() - imgWidth[here]) / 2;
+                        marginL = (width - (imgWidth[here]+borderSize*2) - holder.width())/ 2;
                     }
                     $('.ui-bshowcase-mid').animate({
-                        marginTop: (height - borderSize - $('.ui-bshowcase-mid').height()) / 2,
+                        marginTop: (height - (imgHeight[here]+borderSize*2)) / 2,
                         marginLeft: marginL
                     }, speed);
                     var val = 0;
                     for (var i = 0; i < here; i++) {
                         val = val + tHeight[i] + marginSize + (thumbBorderSize * 2);
                     }
-                    val = (val - ((height + borderSize * 2) / 2) + (tHeight[i] / 2)) * -1;
-                    if (val > (containerHeight - (height + borderSize * 2) + tHeight[i]) * -1 && val < 0) {
+                    val = (val - (height / 2) + (tHeight[i] + (thumbBorderSize * 2))/ 2) * -1;
+                    if (val > (containerHeight - height) * -1 && val < 0) {
                         $('.ui-bshowcase-container').animate({ top: val }, speed);
-                    } else if (here === 0 || here === 1 || here === 2) {
-                        $('.ui-bshowcase-container').animate({ top: 0 }, speed);
+                    } else if (here === 0 || here === 1) {
+                        $('.ui-bshowcase-container').animate({ top: defaultStartPositionV }, speed);
                     }
                     $(".ui-bshowcase-container > img").css({ opacity: 0.4 }).eq(here).css({ opacity: 1 });
                 });
@@ -448,17 +459,17 @@
                     var item = $(img[here].toString()).css({ height: imgHeight[here], width: imgWidth[here] }).hide();
                     $('.ui-bshowcase-mid').empty().append(item).children('img').fadeIn(speed);
                     $('.ui-bshowcase-mid').animate({
-                        marginLeft: (width - borderSize - $('.ui-bshowcase-mid').width()) / 2
+                        marginLeft: (width - ($('.ui-bshowcase-mid').width()+(borderSize*2))) / 2
                     }, speed);
                     var val = 0;
                     for (var i = 0; i < here; i++) {
                         val = val + tWidth[i] + marginSize + (thumbBorderSize * 2);
                     }
-                    val = (val - ((width + borderSize * 2) / 2) + (tWidth[i] / 2)) * -1;
-                    if (val > (containerWidth - (width + borderSize * 2) + tWidth[i]) * -1 && val < 0) {
+                    val = (val - (width / 2) + (tWidth[i] + (thumbBorderSize * 2))/ 2) * -1;
+                    if (val > (containerWidth - width) * -1 && val < 0) {
                         $('.ui-bshowcase-container').animate({ left: val }, speed);
-                    } else if (here === 0 || here === 1 || here === 2) {
-                        $('.ui-bshowcase-container').animate({ left: 0 }, speed);
+                    } else if (here === 0 || here === 1) {
+                        $('.ui-bshowcase-container').animate({ left: defaultStartPositionH }, speed);
                     }
                     $(".ui-bshowcase-container > img").css({ opacity: 0.4 }).eq(here).css({ opacity: 1 });
                 });
@@ -518,12 +529,36 @@
             }
             this.options.autoSlide = newAutoSlide;
         },
-        position: function (newPosition){
+        position: function (newPosition) {
             if(newPosition === undefined) {
                 return this.options.position;
             }
             this.options.position = newPosition;
+        },
+        borderColor: function (newBorderColor) {
+            if(newBorderColor === undefined) {
+                return this.options.borderColor;
+            }
+            this.options.borderColor = newBorderColor;
+        },
+        shadowColor: function (newShadowColor) {
+            if(newShadowColor === undefined) {
+                return this.options.shadowColor;
+            }
+            this.options.shadowColor = newShadowColor;
+        },
+        borderSize: function (newBorderSize) {
+            if(newBorderSize === undefined) {
+                return this.options.borderSize;
+            }
+            this.options.borderSize = newBorderSize;
+        },
+        thumbBorderSize: function (newThumbBorderSize) {
+            if(newThumbBorderSize === undefined) {
+                return this.options.thumbBorderSize;
+            }
+            this.options.thumbBorderSize = newThumbBorderSize;
         }
     });
-    $.extend($.fn.bshowcase, { version: "1.0.0" });
+    $.extend($.fn.bshowcase, { version: "1.0.1" });
 })(jQuery);
