@@ -67,7 +67,7 @@ Usage when user defined options:
 bshowcase
 =======
 
-Be Showcase is a quick & easy to set up image slider with thumbnails, based on html markup and jquery..
+Be Showcase is a quick & easy to set up image showcase, based on HTML markup and jQuery 1.9.1 & jQueryUI 1.9.2
 
 Usage for bshowcase:
     
@@ -96,9 +96,9 @@ Usage with user defined options:
         $("#container").bshowcase({
           width: 450,                                   // Width of slider (default value is container's css)
           height: 320,                                  // Height of slider (default value is container's css)
-          interval: 4000,                               // Interval between each image slide by milisecond (default 5000)
+          interval: 10000,                              // Interval between each image slide by milisecond (default 10000)
           count: 4,                                     // Image count you want to show (in this case last 2 img hidden)
-          speed: 750,                                   // Speed of fade animation ('fast', 'slow', 200) // 200 as miliseconds
+          speed: 750,                                   // Speed of fade animation ('fast' or 'slow' or 750) 750 as miliseconds
           autoSlide: false,                             // Boolean for timed animations by given interval. def: true - On false; animates only when clicked..
           position: 'right'                             // Position of the thumbnail gallery def: bottom
           borderColor: 'white',                         // Border color of mainframe and thumbnails
