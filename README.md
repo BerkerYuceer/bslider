@@ -1,7 +1,7 @@
 bslider
 =======
 
-Be Slider is a quick & easy to set up image slider, based on html markup and jquery..
+Be Slider is a quick & easy to set up image slider, based on HTML markup and jQuery 1.9.1 & jQueryUI 1.9.2
 
     /*
     * Copyright (c) 2013 BERKER YUCEER
