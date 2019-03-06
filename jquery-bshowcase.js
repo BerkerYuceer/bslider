@@ -20,7 +20,7 @@
 * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR 
 * OTHER DEALINGS IN THE SOFTWARE.
 */
-;(function ($, undefined) {
+(function ($) {
     $.widget("fn.bshowcase", {
         options: {
             width: 0,
