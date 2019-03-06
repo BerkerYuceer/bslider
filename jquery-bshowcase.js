@@ -47,16 +47,83 @@
             borderSize: 3,
             thumbBorderSize: 2
         },
+        width: function (newWidth) {
+            if (newWidth === undefined) {
+                return this.element.width;
+            }
+            this.options.width = newWidth;
+        },
+        height: function (newHeight) {
+            if (newHeight === undefined) {
+                return this.element.height;
+            }
+            this.options.height = newHeight;
+        },
+        interval: function (newInterval) {
+            if (newInterval === undefined) {
+                return this.defaults.interval;
+            }
+            this.options.interval = newInterval;
+        },
+        speed: function (newSpeed) {
+            if (newSpeed === undefined) {
+                return this.defaults.speed;
+            }
+            this.options.speed = newSpeed;
+        },
+        count: function (newCount) {
+            if (newCount === undefined) {
+                return this.element.children().length;
+            }
+            // Don't allow any count more than image count
+            this.options.count = Math.min(count, newCount);
+        },
+        autoSlide: function (newAutoSlide) {
+            if (newAutoSlide === undefined) {
+                return this.defaults.autoSlide;
+            }
+            this.options.autoSlide = newAutoSlide;
+        },
+        position: function (newPosition) {
+            if(newPosition === undefined) {
+                return this.defaults.position;
+            }
+            this.options.position = newPosition;
+        },
+        borderColor: function (newBorderColor) {
+            if(newBorderColor === undefined) {
+                return this.defaults.borderColor;
+            }
+            this.options.borderColor = newBorderColor;
+        },
+        shadowColor: function (newShadowColor) {
+            if(newShadowColor === undefined) {
+                return this.defaults.shadowColor;
+            }
+            this.options.shadowColor = newShadowColor;
+        },
+        borderSize: function (newBorderSize) {
+            if(newBorderSize === undefined) {
+                return this.defaults.borderSize;
+            }
+            this.options.borderSize = newBorderSize;
+        },
+        thumbBorderSize: function (newThumbBorderSize) {
+            if(newThumbBorderSize === undefined) {
+                return this.defaults.thumbBorderSize;
+            }
+            this.options.thumbBorderSize = newThumbBorderSize;
+        },
         _create: function () {
-            var width = this.defaults.width || this.element.width(),
-                height = this.defaults.height || this.element.height(),
-                interval = this.defaults.interval,
-                count = this.element.children('img').length,
-                speed = this.defaults.speed,
-                autoSlide = this.defaults.autoSlide,
-                position = this.defaults.position,
-                borderColor = this.defaults.borderColor,
-                shadowColor = this.defaults.shadowColor,
+            var width = this.options.width,
+                height = this.options.height,
+                interval = this.options.interval,
+                count = this.options.count,
+                speed = this.options.speed,
+                autoSlide = this.options.autoSlide,
+                position = this.options.position,
+                borderColor = this.options.borderColor,
+                shadowColor = this.options.shadowColor,
                 img = new Array([]),
                 // Images
                 imgWidth = new Array([]),
@@ -503,73 +570,6 @@
             this.element.removeClass("ui-bshowcase");
             this.element.append(img);
             return this.element;
-        },
-        width: function (newWidth) {
-            if (newWidth === undefined) {
-                return this.element.width;
-            }
-            this.options.width = newWidth;
-        },
-        height: function (newHeight) {
-            if (newHeight === undefined) {
-                return this.element.height;
-            }
-            this.options.height = newHeight;
-        },
-        interval: function (newInterval) {
-            if (newInterval === undefined) {
-                return this.options.interval;
-            }
-            this.options.interval = newInterval;
-        },
-        speed: function (newSpeed) {
-            if (newSpeed === undefined) {
-                return this.options.speed;
-            }
-            this.options.speed = newSpeed;
-        },
-        count: function (newCount) {
-            if (newCount === undefined) {
-                return this.element.children().length;
-            }
-            // Don't allow any count more than image count
-            this.options.count = Math.min(count, newCount);
-        },
-        autoSlide: function (newAutoSlide) {
-            if (newAutoSlide === undefined) {
-                return this.options.autoSlide;
-            }
-            this.options.autoSlide = newAutoSlide;
-        },
-        position: function (newPosition) {
-            if(newPosition === undefined) {
-                return this.options.position;
-            }
-            this.options.position = newPosition;
-        },
-        borderColor: function (newBorderColor) {
-            if(newBorderColor === undefined) {
-                return this.options.borderColor;
-            }
-            this.options.borderColor = newBorderColor;
-        },
-        shadowColor: function (newShadowColor) {
-            if(newShadowColor === undefined) {
-                return this.options.shadowColor;
-            }
-            this.options.shadowColor = newShadowColor;
-        },
-        borderSize: function (newBorderSize) {
-            if(newBorderSize === undefined) {
-                return this.options.borderSize;
-            }
-            this.options.borderSize = newBorderSize;
-        },
-        thumbBorderSize: function (newThumbBorderSize) {
-            if(newThumbBorderSize === undefined) {
-                return this.options.thumbBorderSize;
-            }
-            this.options.thumbBorderSize = newThumbBorderSize;
         }
     });
     $.extend($.fn.bshowcase, { version: "1.0.1" });
